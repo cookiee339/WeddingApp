@@ -41,10 +41,24 @@ class PhotoService {
                         photoId = resultRow[Photos.photoId],
                         imageUrl = resultRow[Photos.imageUrl],
                         uploaderId = resultRow[Photos.uploaderId],
-                        uploadedAt = resultRow[Photos.uploadedAt].toInstant().toString()
+                        uploadedAt = resultRow[Photos.uploadedAt].toString()
                     )
                 }
         }
+    }
+    
+    /**
+     * Gets all photos with pagination metadata.
+     *
+     * @param uploaderId Optional ID to filter photos by uploader
+     * @param page Page number (1-based) for pagination
+     * @param limit Maximum number of photos to return per page
+     * @return Pair of (list of photos, total count) for building paginated responses
+     */
+    suspend fun getAllPhotosWithCount(uploaderId: String? = null, page: Int = 1, limit: Int = 20): Pair<List<Photo>, Int> {
+        val photos = getAllPhotos(uploaderId, page, limit)
+        val count = countPhotos(uploaderId).toInt()
+        return Pair(photos, count)
     }
 
     /**
@@ -61,7 +75,7 @@ class PhotoService {
                         photoId = resultRow[Photos.photoId],
                         imageUrl = resultRow[Photos.imageUrl],
                         uploaderId = resultRow[Photos.uploaderId],
-                        uploadedAt = resultRow[Photos.uploadedAt].toInstant().toString()
+                        uploadedAt = resultRow[Photos.uploadedAt].toString()
                     )
                 }
                 .singleOrNull()
@@ -80,7 +94,7 @@ class PhotoService {
             val insertStatement = Photos.insert {
                 it[Photos.imageUrl] = imageUrl
                 it[Photos.uploaderId] = uploaderId
-                it[Photos.uploadedAt] = java.sql.Timestamp.from(Instant.now())
+                it[Photos.uploadedAt] = Instant.now()
             }
             
             val resultRow = insertStatement.resultedValues?.singleOrNull()
@@ -90,7 +104,7 @@ class PhotoService {
                     photoId = resultRow[Photos.photoId],
                     imageUrl = resultRow[Photos.imageUrl],
                     uploaderId = resultRow[Photos.uploaderId],
-                    uploadedAt = resultRow[Photos.uploadedAt].toInstant().toString()
+                    uploadedAt = resultRow[Photos.uploadedAt].toString()
                 )
             } else {
                 logger.error { "Failed to insert photo for uploader $uploaderId" }

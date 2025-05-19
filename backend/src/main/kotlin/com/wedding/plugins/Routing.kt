@@ -1,6 +1,6 @@
 package com.wedding.plugins
 
-import com.wedding.models.PhotoUploadRequest
+import com.wedding.models.Photo
 import com.wedding.services.CloudinaryService
 import com.wedding.services.PhotoService
 import io.ktor.http.*
@@ -17,6 +17,25 @@ import java.util.*
  */
 fun Application.configureRouting(cloudinaryService: CloudinaryService, photoService: PhotoService) {
     val logger = KotlinLogging.logger {}
+    
+    // Constants for pagination defaults
+    val DEFAULT_PAGE = 1
+    val DEFAULT_LIMIT = 20
+    val MAX_LIMIT = 100
+    
+    // Standard error response format
+    data class ErrorResponse(val error: String, val details: String? = null)
+    
+    // Data classes for request/response
+    data class DeletePhotoRequest(val uploader_id: String)
+    
+    data class PaginatedResponse<T>(
+        val data: List<T>,
+        val page: Int,
+        val limit: Int,
+        val total: Int,
+        val pages: Int
+    )
     
     routing {
         // Health check endpoint
