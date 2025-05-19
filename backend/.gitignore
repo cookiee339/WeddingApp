@@ -1,0 +1,44 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.classpath
+.project
+.settings/
+bin/
+
+# Log files
+*.log
+logs/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Kotlin
+*.kotlin_module
+
+# Compiled class files
+*.class
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Local configuration
+local.properties
+
+# Temporary files
+tmp/
+temp/
+
+# Generated files
+gen/
