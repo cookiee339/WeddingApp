@@ -4,10 +4,15 @@ import com.wedding.database.DatabaseFactory.dbQuery
 import com.wedding.database.tables.Photos
 import com.wedding.models.Photo
 import mu.KotlinLogging
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.count
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import java.time.Instant
-import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 /**
@@ -32,7 +37,7 @@ class PhotoService {
             } else {
                 Photos.selectAll()
             }
-            
+
             query
                 .orderBy(Photos.uploadedAt, SortOrder.DESC)
                 .limit(limit, offset = ((page - 1) * limit).toLong())
@@ -41,12 +46,12 @@ class PhotoService {
                         photoId = resultRow[Photos.photoId],
                         imageUrl = resultRow[Photos.imageUrl],
                         uploaderId = resultRow[Photos.uploaderId],
-                        uploadedAt = resultRow[Photos.uploadedAt].toString()
+                        uploadedAt = resultRow[Photos.uploadedAt].toString(),
                     )
                 }
         }
     }
-    
+
     /**
      * Gets all photos with pagination metadata.
      *
@@ -75,7 +80,7 @@ class PhotoService {
                         photoId = resultRow[Photos.photoId],
                         imageUrl = resultRow[Photos.imageUrl],
                         uploaderId = resultRow[Photos.uploaderId],
-                        uploadedAt = resultRow[Photos.uploadedAt].toString()
+                        uploadedAt = resultRow[Photos.uploadedAt].toString(),
                     )
                 }
                 .singleOrNull()
@@ -96,15 +101,15 @@ class PhotoService {
                 it[Photos.uploaderId] = uploaderId
                 it[Photos.uploadedAt] = Instant.now()
             }
-            
+
             val resultRow = insertStatement.resultedValues?.singleOrNull()
-            
+
             if (resultRow != null) {
                 Photo(
                     photoId = resultRow[Photos.photoId],
                     imageUrl = resultRow[Photos.imageUrl],
                     uploaderId = resultRow[Photos.uploaderId],
-                    uploadedAt = resultRow[Photos.uploadedAt].toString()
+                    uploadedAt = resultRow[Photos.uploadedAt].toString(),
                 )
             } else {
                 logger.error { "Failed to insert photo for uploader $uploaderId" }
@@ -130,10 +135,10 @@ class PhotoService {
                 // Delete any photo with this ID
                 Photos.photoId eq photoId
             }
-            
+
             // Perform the delete operation
             val deletedRows = Photos.deleteWhere { whereClause }
-            
+
             // Return whether a row was deleted
             deletedRows > 0
         }

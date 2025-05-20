@@ -11,16 +11,20 @@ import java.io.InputStream
  */
 class CloudinaryService(config: CloudinaryConfig) {
     private val logger = KotlinLogging.logger {}
-    
+
     private val cloudinary = Cloudinary(
         ObjectUtils.asMap(
-            "cloud_name", config.cloudName,
-            "api_key", config.apiKey,
-            "api_secret", config.apiSecret,
-            "secure", true
-        )
+            "cloud_name",
+            config.cloudName,
+            "api_key",
+            config.apiKey,
+            "api_secret",
+            config.apiSecret,
+            "secure",
+            true,
+        ),
     )
-    
+
     /**
      * Uploads an image to Cloudinary.
      *
@@ -36,26 +40,29 @@ class CloudinaryService(config: CloudinaryConfig) {
                 "folder", "wedding_photos",
                 "use_filename", true,
                 "unique_filename", true,
-                "transformation", ObjectUtils.asMap(
-                    "quality", "auto:good",
-                    "fetch_format", "auto"
-                )
+                "transformation",
+                ObjectUtils.asMap(
+                    "quality",
+                    "auto:good",
+                    "fetch_format",
+                    "auto",
+                ),
             )
-            
+
             // Upload to Cloudinary
             val result = cloudinary.uploader().upload(imageStream, options)
-            
+
             // Get secure URL
             val secureUrl = result["secure_url"] as String
             logger.info { "Successfully uploaded image $filename to Cloudinary at $secureUrl" }
-            
+
             secureUrl
         } catch (e: Exception) {
             logger.error(e) { "Failed to upload image $filename to Cloudinary" }
             null
         }
     }
-    
+
     /**
      * Deletes an image from Cloudinary.
      *
@@ -66,21 +73,21 @@ class CloudinaryService(config: CloudinaryConfig) {
         return try {
             val result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap())
             val status = result["result"]
-            
+
             val success = status == "ok"
             if (success) {
                 logger.info { "Successfully deleted image $publicId from Cloudinary" }
             } else {
                 logger.warn { "Failed to delete image $publicId from Cloudinary: $result" }
             }
-            
+
             success
         } catch (e: Exception) {
             logger.error(e) { "Error deleting image $publicId from Cloudinary" }
             false
         }
     }
-    
+
     /**
      * Extracts the public ID from a Cloudinary URL.
      *

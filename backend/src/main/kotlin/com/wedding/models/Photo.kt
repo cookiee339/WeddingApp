@@ -1,7 +1,6 @@
 package com.wedding.models
 
 import kotlinx.serialization.Serializable
-import java.time.Instant
 
 /**
  * Represents a photo in the application.
@@ -16,7 +15,7 @@ data class Photo(
     val photoId: Int,
     val imageUrl: String,
     val uploaderId: String,
-    val uploadedAt: String // ISO 8601 timestamp
+    val uploadedAt: String, // ISO 8601 timestamp
 )
 
 /**
@@ -24,7 +23,7 @@ data class Photo(
  */
 @Serializable
 data class PhotoUploadRequest(
-    val uploaderId: String
+    val uploaderId: String,
 )
 
 /**
@@ -35,5 +34,5 @@ data class PhotoUploadResponse(
     val photoId: Int,
     val imageUrl: String,
     val uploaderId: String,
-    val uploadedAt: String
+    val uploadedAt: String,
 )

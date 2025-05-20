@@ -12,34 +12,34 @@ import mu.KotlinLogging
  */
 fun Application.configureStatusPages() {
     val logger = KotlinLogging.logger {}
-    
+
     install(StatusPages) {
         exception<Throwable> { call, cause ->
             logger.error(cause) { "Unhandled exception" }
-            
+
             val status = when (cause) {
                 is IllegalArgumentException -> HttpStatusCode.BadRequest
                 is NoSuchElementException -> HttpStatusCode.NotFound
                 is SecurityException -> HttpStatusCode.Forbidden
                 else -> HttpStatusCode.InternalServerError
             }
-            
+
             call.respond(
                 status,
                 ErrorResponse(
                     status = status.value,
-                    message = cause.message ?: "An error occurred"
-                )
+                    message = cause.message ?: "An error occurred",
+                ),
             )
         }
-        
+
         status(HttpStatusCode.NotFound) { call, _ ->
             call.respond(
                 HttpStatusCode.NotFound,
                 ErrorResponse(
                     status = HttpStatusCode.NotFound.value,
-                    message = "Resource not found"
-                )
+                    message = "Resource not found",
+                ),
             )
         }
     }
@@ -51,5 +51,5 @@ fun Application.configureStatusPages() {
 @Serializable
 data class ErrorResponse(
     val status: Int,
-    val message: String
+    val message: String,
 )

@@ -1,15 +1,15 @@
 package com.wedding.database
 
 import com.wedding.config.DatabaseConfig
+import com.wedding.database.tables.Photos
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import mu.KotlinLogging
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import com.wedding.database.tables.Photos
-import mu.KotlinLogging
 
 object DatabaseFactory {
     private val logger = KotlinLogging.logger {}

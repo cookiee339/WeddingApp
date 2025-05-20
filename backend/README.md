@@ -25,7 +25,8 @@ A Kotlin/Ktor backend for the Wedding Photo Gallery application that enables pho
 
 - JDK 11 or higher
 - Kotlin 1.9+
-- PostgreSQL database
+- Docker and Docker Compose (for local development)
+- PostgreSQL database (if not using Docker)
 - Cloudinary account
 
 ### Installation
@@ -37,6 +38,26 @@ A Kotlin/Ktor backend for the Wedding Photo Gallery application that enables pho
 # Run the application
 ./gradlew run
 ```
+
+### Local Development with Docker
+
+For local development, we provide Docker Compose configurations to simplify setup:
+
+```bash
+# Start only PostgreSQL database (for local development)
+docker-compose up -d
+
+# OR: Start the full stack (PostgreSQL + backend service)
+docker-compose -f docker-compose.full.yml up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop containers
+docker-compose down
+```
+
+When running just the PostgreSQL container, you can connect your locally running application to it by using the default configuration in `application.conf`.
 
 ## Environment Variables
 
@@ -59,6 +80,8 @@ PORT=8080
 
 ## Database Setup
 
+### Manual Setup
+
 1. Create a PostgreSQL database:
 ```sql
 CREATE DATABASE wedding_photos;
@@ -67,6 +90,21 @@ CREATE DATABASE wedding_photos;
 2. Run the schema creation script:
 ```bash
 psql -U postgres -d wedding_photos -a -f src/main/resources/schema.sql
+```
+
+### Using Docker
+
+The Docker Compose setup automatically initializes the database with the schema. To connect to the PostgreSQL instance running in Docker:
+
+```bash
+# Connect to the database
+docker exec -it wedding-db-local psql -U postgres -d wedding_photos
+
+# View tables
+\dt
+
+# Execute queries
+SELECT * FROM photos;
 ```
 
 ## Project Structure
@@ -125,3 +163,49 @@ backend/
 - Images are automatically optimized when uploaded
 - The database stores metadata about images, not the images themselves
 - Connection pooling is used for efficient database connections
+
+## Code Style
+
+This project uses [ktlint](https://github.com/pinterest/ktlint) to enforce consistent code style based on the official Kotlin coding conventions.
+
+### Running ktlint
+
+```bash
+# Check code style
+./gradlew ktlintCheck
+
+# Automatically fix code style issues
+./gradlew ktlintFormat
+```
+
+The build process automatically includes ktlint checks. If you want to disable this behavior, you can use:
+
+```bash
+./gradlew build -x ktlintCheck
+```
+
+### IDE Integration
+
+For the best development experience, consider installing ktlint plugins for your IDE:
+
+- **IntelliJ IDEA**: Install the "Ktlint" plugin from the JetBrains Marketplace
+- **VS Code**: Install the "Ktlint" extension
+
+These plugins will highlight code style issues directly in your editor.
+
+### Known Issues
+
+The current codebase has several style violations, primarily related to wildcard imports. These need to be fixed manually by replacing wildcard imports (e.g., `io.ktor.http.*`) with specific imports for the classes that are actually used.
+
+Example of fixing wildcard imports:
+
+Before:
+```
+io.ktor.http.*
+```
+
+After:
+```
+io.ktor.http.HttpStatusCode
+io.ktor.http.ContentType
+```
