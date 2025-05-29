@@ -2,14 +2,24 @@ package com.wedding.plugins
 
 import com.wedding.services.CloudinaryService
 import com.wedding.services.PhotoService
-import io.ktor.http.*
-import io.ktor.http.content.*
-import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.content.PartData
+import io.ktor.http.content.forEachPart
+import io.ktor.http.content.streamProvider
+import io.ktor.server.application.Application
+import io.ktor.server.application.call
+import io.ktor.server.request.receive
+import io.ktor.server.request.receiveMultipart
+import io.ktor.server.response.respond
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.route
+import io.ktor.server.routing.routing
 import mu.KotlinLogging
-import java.util.*
+import java.util.UUID
+import kotlin.math.ceil
 
 /** Configures routing for the application. */
 fun Application.configureRouting(cloudinaryService: CloudinaryService, photoService: PhotoService) {
@@ -43,26 +53,45 @@ fun Application.configureRouting(cloudinaryService: CloudinaryService, photoServ
             // Get all photos with optional filtering
             get {
                 val uploaderId = call.request.queryParameters["uploaderId"]
-                val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
-                val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 20
+                val page = call.request.queryParameters["page"]?.toIntOrNull() ?: DEFAULT_PAGE
+                val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: DEFAULT_LIMIT
 
+                // Validate pagination parameters
                 if (page <= 0 || limit <= 0) {
                     call.respond(
                         HttpStatusCode.BadRequest,
-                        "Page and limit must be positive integers",
+                        ErrorResponse("Invalid pagination parameters", "Page and limit must be positive integers"),
                     )
                     return@get
                 }
 
-                val photos = photoService.getAllPhotos(uploaderId, page, limit)
-                call.respond(photos)
+                // Apply maximum limit to prevent excessive data retrieval
+                val effectiveLimit = if (limit > MAX_LIMIT) MAX_LIMIT else limit
+
+                // Get photos with count for pagination
+                val (photos, totalCount) = photoService.getAllPhotosWithCount(uploaderId, page, effectiveLimit)
+                val totalPages = ceil(totalCount.toDouble() / effectiveLimit).toInt()
+
+                // Return paginated response
+                call.respond(
+                    PaginatedResponse(
+                        data = photos,
+                        page = page,
+                        limit = effectiveLimit,
+                        total = totalCount,
+                        pages = totalPages,
+                    ),
+                )
             }
 
             // Get a specific photo by ID
             get("{id}") {
                 val id = call.parameters["id"]?.toIntOrNull()
                 if (id == null) {
-                    call.respond(HttpStatusCode.BadRequest, "Invalid photo ID")
+                    call.respond(
+                        HttpStatusCode.BadRequest,
+                        ErrorResponse("Invalid request", "Photo ID must be a valid integer"),
+                    )
                     return@get
                 }
 
@@ -70,7 +99,10 @@ fun Application.configureRouting(cloudinaryService: CloudinaryService, photoServ
                 if (photo != null) {
                     call.respond(photo)
                 } else {
-                    call.respond(HttpStatusCode.NotFound, "Photo not found")
+                    call.respond(
+                        HttpStatusCode.NotFound,
+                        ErrorResponse("Resource not found", "Photo with ID $id does not exist"),
+                    )
                 }
             }
 
@@ -82,46 +114,61 @@ fun Application.configureRouting(cloudinaryService: CloudinaryService, photoServ
                 var imageStream: PartData.FileItem? = null
                 var fileName: String? = null
 
-                // Process each part of the multipart request
-                multipart.forEachPart { part ->
-                    when (part) {
-                        is PartData.FormItem -> {
-                            if (part.name == "uploader_id") {
-                                uploaderId = part.value
-                            }
-                        }
-                        is PartData.FileItem -> {
-                            imageStream = part
-                            fileName = part.originalFileName ?: "unknown_${UUID.randomUUID()}.jpg"
-                        }
-                        else -> {}
-                    }
-                    // Don't dispose parts yet as we need the file stream
-                }
-
-                // Validate required fields
-                if (uploaderId == null || imageStream == null) {
-                    imageStream?.dispose?.let { it1 -> it1() }
-                    call.respond(
-                        HttpStatusCode.BadRequest,
-                        "Missing required fields: uploader_id and image file",
-                    )
-                    return@post
-                }
-
                 try {
-                    // Upload to Cloudinary
-                    val cloudinaryUrl =
-                        cloudinaryService.uploadImage(
-                            imageStream!!.streamProvider(),
-                            fileName!!,
+                    // Process each part of the multipart request
+                    multipart.forEachPart { part ->
+                        when (part) {
+                            is PartData.FormItem -> {
+                                if (part.name == "uploader_id") {
+                                    uploaderId = part.value
+                                }
+                                // Always dispose form items after processing
+                                part.dispose.invoke()
+                            }
+                            is PartData.FileItem -> {
+                                // If we already have an image, dispose the new one
+                                if (imageStream != null) {
+                                    part.dispose.invoke()
+                                } else {
+                                    imageStream = part
+                                    fileName = part.originalFileName ?: "unknown_${UUID.randomUUID()}.jpg"
+                                }
+                            }
+                            else -> part.dispose.invoke()
+                        }
+                    }
+
+                    // Validate required fields
+                    if (uploaderId.isNullOrBlank()) {
+                        imageStream?.dispose?.invoke()
+                        call.respond(
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse("Missing required field", "uploader_id is required"),
                         )
-                    imageStream!!.dispose()
+                        return@post
+                    }
+
+                    if (imageStream == null) {
+                        call.respond(
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse("Missing required field", "Image file is required"),
+                        )
+                        return@post
+                    }
+
+                    // Upload to Cloudinary
+                    val cloudinaryUrl = cloudinaryService.uploadImage(
+                        imageStream!!.streamProvider(),
+                        fileName!!,
+                    )
+
+                    // Always dispose the image stream after using it
+                    imageStream!!.dispose.invoke()
 
                     if (cloudinaryUrl == null) {
                         call.respond(
                             HttpStatusCode.InternalServerError,
-                            "Failed to upload image to cloud storage",
+                            ErrorResponse("Upload failed", "Failed to upload image to cloud storage"),
                         )
                         return@post
                     }
@@ -133,14 +180,17 @@ fun Application.configureRouting(cloudinaryService: CloudinaryService, photoServ
                     } else {
                         call.respond(
                             HttpStatusCode.InternalServerError,
-                            "Failed to save photo metadata",
+                            ErrorResponse("Database error", "Failed to save photo metadata"),
                         )
                     }
                 } catch (e: Exception) {
+                    // Ensure resources are cleaned up in case of exception
+                    imageStream?.dispose?.invoke()
+
                     logger.error(e) { "Error processing photo upload" }
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        "Error processing upload: ${e.message}",
+                        ErrorResponse("Server error", "Error processing upload: ${e.message}"),
                     )
                 }
             }
@@ -149,23 +199,29 @@ fun Application.configureRouting(cloudinaryService: CloudinaryService, photoServ
             delete("{id}") {
                 val id = call.parameters["id"]?.toIntOrNull()
                 if (id == null) {
-                    call.respond(HttpStatusCode.BadRequest, "Invalid photo ID")
+                    call.respond(
+                        HttpStatusCode.BadRequest,
+                        ErrorResponse("Invalid request", "Photo ID must be a valid integer"),
+                    )
                     return@delete
                 }
 
                 // Get uploader ID from request body for verification
-                val request =
-                    try {
-                        call.receive<Map<String, String>>()
-                    } catch (e: Exception) {
-                        null
-                    }
+                val request = try {
+                    call.receive<Map<String, String>>()
+                } catch (e: Exception) {
+                    logger.warn { "Failed to parse delete request body: ${e.message}" }
+                    null
+                }
                 val uploaderId = request?.get("uploader_id")
 
                 // Get the photo first to get the Cloudinary URL
                 val photo = photoService.getPhotoById(id)
                 if (photo == null) {
-                    call.respond(HttpStatusCode.NotFound, "Photo not found")
+                    call.respond(
+                        HttpStatusCode.NotFound,
+                        ErrorResponse("Resource not found", "Photo with ID $id does not exist"),
+                    )
                     return@delete
                 }
 
@@ -173,7 +229,7 @@ fun Application.configureRouting(cloudinaryService: CloudinaryService, photoServ
                 if (uploaderId != null && photo.uploaderId != uploaderId) {
                     call.respond(
                         HttpStatusCode.Forbidden,
-                        "You don't have permission to delete this photo",
+                        ErrorResponse("Access denied", "You don't have permission to delete this photo"),
                     )
                     return@delete
                 }
@@ -183,7 +239,7 @@ fun Application.configureRouting(cloudinaryService: CloudinaryService, photoServ
                 if (!deleted) {
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        "Failed to delete photo from database",
+                        ErrorResponse("Database error", "Failed to delete photo from database"),
                     )
                     return@delete
                 }

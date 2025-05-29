@@ -11,9 +11,9 @@ import com.wedding.plugins.configureStatusPages
 import com.wedding.services.CloudinaryService
 import com.wedding.services.PhotoService
 import io.github.config4k.extract
-import io.ktor.server.application.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
+import io.ktor.server.application.Application
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
 
 fun main() {
     // Load configuration
@@ -46,4 +46,15 @@ fun Application.module(cloudinaryService: CloudinaryService, photoService: Photo
     configureRouting(cloudinaryService, photoService)
     configureCORS()
     configureStatusPages()
+}
+
+// No-argument version of module for testing
+fun Application.module() {
+    // Create test instances of services
+    val cloudinaryConfig = CloudinaryConfig("test", "test", "test")
+    val cloudinaryService = CloudinaryService(cloudinaryConfig)
+    val photoService = PhotoService()
+
+    // Call the main module function
+    module(cloudinaryService, photoService)
 }
