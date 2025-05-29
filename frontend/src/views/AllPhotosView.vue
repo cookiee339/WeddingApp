@@ -28,18 +28,18 @@
 
     <!-- Photos grid -->
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      <div v-for="photo in photos" :key="photo.photo_id" class="photo-card">
+      <div v-for="photo in photos" :key="photo.photoId" class="photo-card">
         <div class="relative pb-[100%] overflow-hidden bg-gray-100">
           <img 
-            :src="photo.image_url" 
-            :alt="'Photo ' + photo.photo_id" 
+            :src="photo.imageUrl" 
+            :alt="'Photo ' + photo.photoId" 
             class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105"
             loading="lazy"
             @click="openPhotoModal(photo)"
           />
         </div>
         <div class="p-2 text-xs text-gray-500">
-          {{ formatDate(photo.uploaded_at) }}
+          {{ formatDate(photo.uploadedAt) }}
         </div>
       </div>
     </div>
@@ -55,8 +55,8 @@
     <div v-if="selectedPhoto" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4" @click="closePhotoModal">
       <div class="max-w-3xl max-h-[90vh] relative" @click.stop>
         <img 
-          :src="selectedPhoto.image_url" 
-          :alt="'Photo ' + selectedPhoto.photo_id" 
+          :src="selectedPhoto.imageUrl" 
+          :alt="'Photo ' + selectedPhoto.photoId" 
           class="max-h-[90vh] max-w-full object-contain rounded-lg"
         />
         <button 
@@ -68,7 +68,7 @@
           </svg>
         </button>
         <div class="absolute bottom-2 left-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded">
-          {{ formatDate(selectedPhoto.uploaded_at) }}
+          {{ formatDate(selectedPhoto.uploadedAt) }}
         </div>
       </div>
     </div>

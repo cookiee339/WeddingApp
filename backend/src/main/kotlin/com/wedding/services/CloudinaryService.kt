@@ -34,23 +34,21 @@ class CloudinaryService(config: CloudinaryConfig) {
      */
     suspend fun uploadImage(imageStream: InputStream, filename: String): String? {
         return try {
+            // Convert the input stream to a byte array which Cloudinary can handle
+            val bytes = imageStream.readAllBytes()
+
             // Upload options
             val options = ObjectUtils.asMap(
                 "resource_type", "image",
                 "folder", "wedding_photos",
                 "use_filename", true,
                 "unique_filename", true,
-                "transformation",
-                ObjectUtils.asMap(
-                    "quality",
-                    "auto:good",
-                    "fetch_format",
-                    "auto",
-                ),
+                "quality", "auto:good",
+                "fetch_format", "auto",
             )
 
-            // Upload to Cloudinary
-            val result = cloudinary.uploader().upload(imageStream, options)
+            // Upload to Cloudinary using byte array instead of InputStream
+            val result = cloudinary.uploader().upload(bytes, options)
 
             // Get secure URL
             val secureUrl = result["secure_url"] as String
@@ -60,6 +58,12 @@ class CloudinaryService(config: CloudinaryConfig) {
         } catch (e: Exception) {
             logger.error(e) { "Failed to upload image $filename to Cloudinary" }
             null
+        } finally {
+            try {
+                imageStream.close()
+            } catch (e: Exception) {
+                logger.warn(e) { "Failed to close image stream" }
+            }
         }
     }
 

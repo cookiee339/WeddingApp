@@ -28,18 +28,18 @@
 
     <!-- Photos grid -->
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      <div v-for="photo in photos" :key="photo.photo_id" class="photo-card">
+      <div v-for="photo in photos" :key="photo.photoId" class="photo-card">
         <div class="relative pb-[100%] overflow-hidden bg-gray-100">
           <img 
-            :src="photo.image_url" 
-            :alt="'Photo ' + photo.photo_id" 
+            :src="photo.imageUrl" 
+            :alt="'Photo ' + photo.photoId" 
             class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105"
             loading="lazy"
             @click="openPhotoModal(photo)"
           />
           <button 
             class="absolute top-2 right-2 bg-black bg-opacity-50 text-white rounded-full p-2"
-            @click.stop="deletePhoto(photo.photo_id)"
+            @click.stop="deletePhoto(photo.photoId)"
             title="Delete photo"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -48,7 +48,7 @@
           </button>
         </div>
         <div class="p-2 text-xs text-gray-500">
-          {{ formatDate(photo.uploaded_at) }}
+          {{ formatDate(photo.uploadedAt) }}
         </div>
       </div>
     </div>
@@ -64,8 +64,8 @@
     <div v-if="selectedPhoto" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4" @click="closePhotoModal">
       <div class="max-w-3xl max-h-[90vh] relative" @click.stop>
         <img 
-          :src="selectedPhoto.image_url" 
-          :alt="'Photo ' + selectedPhoto.photo_id" 
+          :src="selectedPhoto.imageUrl" 
+          :alt="'Photo ' + selectedPhoto.photoId" 
           class="max-h-[90vh] max-w-full object-contain rounded-lg"
         />
         <button 
@@ -77,7 +77,7 @@
           </svg>
         </button>
         <div class="absolute bottom-2 left-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded">
-          {{ formatDate(selectedPhoto.uploaded_at) }}
+          {{ formatDate(selectedPhoto.uploadedAt) }}
         </div>
       </div>
     </div>
@@ -127,7 +127,7 @@ async function fetchMyPhotos(loadMore = false) {
     photos.value = [];
   }
   
-  const uploaderId = localStorage.getItem('uploader_id');
+  const uploaderId = localStorage.getItem('uploaderId');
   if (!uploaderId) {
     error.value = 'User identifier not found. Please refresh the page.';
     isLoading.value = false;
@@ -204,18 +204,18 @@ async function confirmDelete() {
   try {
     await api.deletePhoto(
       photoIdToDelete.value,
-      localStorage.getItem('uploader_id')
+      localStorage.getItem('uploaderId')
     );
     
     // Remove photo from the list
-    photos.value = photos.value.filter(photo => photo.photo_id !== photoIdToDelete.value);
+    photos.value = photos.value.filter(photo => photo.photoId !== photoIdToDelete.value);
     
     // Close dialog
     showDeleteConfirm.value = false;
     photoIdToDelete.value = null;
     
     // If we were viewing this photo in the modal, close it
-    if (selectedPhoto.value && selectedPhoto.value.photo_id === photoIdToDelete.value) {
+    if (selectedPhoto.value && selectedPhoto.value.photoId === photoIdToDelete.value) {
       closePhotoModal();
     }
   } catch (err) {
