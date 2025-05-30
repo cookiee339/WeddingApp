@@ -74,18 +74,28 @@ export default {
    * 
    * @param {File} file - The image file to upload
    * @param {string} uploaderId - The ID of the uploader
+   * @param {Function} [onProgress] - Optional progress callback function
    * @returns {Promise<Object>} Uploaded photo object
    */
-  uploadPhoto(file, uploaderId) {
+  uploadPhoto(file, uploaderId, onProgress = null) {
     const formData = new FormData();
     formData.append('image', file);
     formData.append('uploader_id', uploaderId);
     
-    return apiClient.post('/photos', formData, {
+    const config = {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
-    }).then(response => response.data);
+    };
+    
+    if (onProgress) {
+      config.onUploadProgress = (progressEvent) => {
+        const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        onProgress(percentage);
+      };
+    }
+    
+    return apiClient.post('/photos', formData, config).then(response => response.data);
   },
   
   /**

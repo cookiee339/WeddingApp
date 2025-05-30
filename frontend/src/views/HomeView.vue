@@ -27,12 +27,36 @@
       <!-- Captured photo preview -->
       <div v-if="capturedImageUrl" class="relative rounded-lg overflow-hidden shadow-lg mb-4">
         <img :src="capturedImageUrl" alt="Captured photo" class="w-full h-auto" />
+        <!-- Upload progress overlay -->
+        <div v-if="isUploading" class="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center">
+          <div class="text-center text-white max-w-xs">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+            <p class="text-lg font-medium mb-3">{{ uploadMessage }}</p>
+            <!-- Progress bar -->
+            <div class="w-full bg-gray-600 rounded-full h-2 mb-2">
+              <div 
+                class="bg-white h-2 rounded-full transition-all duration-300 ease-out" 
+                :style="{ width: uploadProgress + '%' }"
+              ></div>
+            </div>
+            <p class="text-sm opacity-75">{{ uploadProgress }}% complete</p>
+          </div>
+        </div>
         <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-3 flex justify-between">
           <button @click="discardPhoto" class="btn-secondary bg-gray-500">
             Discard
           </button>
           <button @click="uploadPhoto" class="btn-primary" :disabled="isUploading">
-            {{ isUploading ? 'Uploading...' : 'Share Photo' }}
+            <span v-if="isUploading" class="flex items-center">
+              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              Uploading...
+            </span>
+            <span v-else class="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              Share Photo
+            </span>
           </button>
         </div>
       </div>
@@ -81,6 +105,8 @@ const videoPreview = ref(null);
 const showPreview = ref(false);
 const capturedImageUrl = ref(null);
 const isUploading = ref(false);
+const uploadProgress = ref(0);
+const uploadMessage = ref('Uploading your photo...');
 const statusMessage = ref('');
 const statusType = ref('');
 let mediaStream = null;
@@ -244,25 +270,46 @@ async function uploadPhoto() {
   }
 
   isUploading.value = true;
+  uploadProgress.value = 0;
+  setStatus('Preparing your photo for upload...', 'info');
 
   try {
     // Convert base64 to blob
     const blob = await fetch(capturedImageUrl.value).then(res => res.blob());
+    
+    setStatus('Uploading photo to the wedding gallery...', 'info');
+    
+    // Send to backend using API client with progress tracking
+    await api.uploadPhoto(blob, uploaderId, (progress) => {
+      uploadProgress.value = progress;
+      
+      // Update message based on progress
+      if (progress < 25) {
+        uploadMessage.value = 'Starting upload...';
+      } else if (progress < 50) {
+        uploadMessage.value = 'Uploading your photo...';
+      } else if (progress < 75) {
+        uploadMessage.value = 'Almost there...';
+      } else if (progress < 100) {
+        uploadMessage.value = 'Finalizing upload...';
+      } else {
+        uploadMessage.value = 'Processing complete!';
+      }
+    });
 
-    // Send to backend using API client
-    await api.uploadPhoto(blob, uploaderId);
-
-    setStatus('Photo uploaded successfully!', 'success');
+    setStatus('Photo uploaded successfully! 🎉', 'success');
     // Clear the captured image after short delay
     setTimeout(() => {
       capturedImageUrl.value = null;
       statusMessage.value = '';
-    }, 2000);
+    }, 3000);
   } catch (error) {
     console.error('Error uploading photo:', error);
-    setStatus('Error uploading photo. Please try again.', 'error');
+    setStatus('Failed to upload photo. Please check your connection and try again.', 'error');
   } finally {
     isUploading.value = false;
+    uploadProgress.value = 0;
+    uploadMessage.value = 'Uploading your photo...';
   }
 }
 
