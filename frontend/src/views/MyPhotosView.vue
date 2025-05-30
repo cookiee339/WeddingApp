@@ -12,14 +12,19 @@
       <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-wedding-primary"></div>
     </div>
 
+    <!-- Debug info (can be removed in production) -->
+    <div class="bg-blue-100 text-blue-800 p-2 rounded text-xs mb-4">
+      User ID: {{ currentUserId || 'Not set' }}
+    </div>
+
     <!-- Error message -->
-    <div v-else-if="error" class="bg-red-100 text-red-800 p-4 rounded-lg my-4">
+    <div v-if="error" class="bg-red-100 text-red-800 p-4 rounded-lg my-4">
       {{ error }}
       <button @click="fetchMyPhotos" class="underline ml-2">Try again</button>
     </div>
 
     <!-- No photos message -->
-    <div v-else-if="photos.length === 0" class="text-center my-12">
+    <div v-if="!isLoading && !error && photos.length === 0" class="text-center my-12">
       <p class="text-xl text-gray-500 mb-4">You haven't shared any photos yet</p>
       <router-link to="/" class="btn-primary inline-block">
         Take your first photo
@@ -118,6 +123,7 @@ const selectedPhoto = ref(null);
 const showDeleteConfirm = ref(false);
 const isDeleting = ref(false);
 const photoIdToDelete = ref(null);
+const currentUserId = ref('');
 
 // Fetch current user's photos from the backend
 async function fetchMyPhotos(loadMore = false) {
@@ -127,7 +133,7 @@ async function fetchMyPhotos(loadMore = false) {
     photos.value = [];
   }
   
-  const uploaderId = localStorage.getItem('uploaderId');
+  const uploaderId = localStorage.getItem('uploader_id');
   if (!uploaderId) {
     error.value = 'User identifier not found. Please refresh the page.';
     isLoading.value = false;
@@ -201,11 +207,19 @@ async function confirmDelete() {
   
   isDeleting.value = true;
   
+  const uploaderId = localStorage.getItem('uploader_id');
+  console.log('Attempting to delete photo:', {
+    photoId: photoIdToDelete.value,
+    uploaderId: uploaderId
+  });
+  
   try {
-    await api.deletePhoto(
+    const response = await api.deletePhoto(
       photoIdToDelete.value,
-      localStorage.getItem('uploaderId')
+      uploaderId
     );
+    
+    console.log('Delete response:', response);
     
     // Remove photo from the list
     photos.value = photos.value.filter(photo => photo.photoId !== photoIdToDelete.value);
@@ -218,9 +232,16 @@ async function confirmDelete() {
     if (selectedPhoto.value && selectedPhoto.value.photoId === photoIdToDelete.value) {
       closePhotoModal();
     }
+    
+    console.log('Photo deleted successfully');
   } catch (err) {
     console.error('Error deleting photo:', err);
-    error.value = 'Failed to delete photo. Please try again later.';
+    console.error('Error details:', {
+      message: err.message,
+      response: err.response?.data,
+      status: err.response?.status
+    });
+    error.value = `Failed to delete photo: ${err.response?.data?.error || err.message}`;
   } finally {
     isDeleting.value = false;
   }
@@ -228,6 +249,7 @@ async function confirmDelete() {
 
 // Fetch photos when component mounts
 onMounted(() => {
+  currentUserId.value = localStorage.getItem('uploader_id') || '';
   fetchMyPhotos();
 });
 </script>

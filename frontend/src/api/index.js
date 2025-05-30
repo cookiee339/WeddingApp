@@ -55,7 +55,7 @@ export default {
    */
   getPhotos(options = {}) {
     return apiClient.get('/photos', { params: options })
-      .then(response => response.data);
+      .then(response => response.data.data);
   },
   
   /**
