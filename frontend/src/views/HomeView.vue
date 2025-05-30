@@ -1,13 +1,67 @@
 <template>
-  <div class="flex flex-col items-center justify-center pt-6">
-    <div class="text-center mb-8 md:mb-16">
+  <div class="flex flex-col items-center justify-center pt-6 relative">
+    <!-- Decorative floral elements around the main content -->
+    <div class="absolute top-0 left-4 opacity-35 hidden md:block">
+      <svg class="w-20 h-24 text-boho-dusty-rose" viewBox="0 0 30 40" fill="currentColor">
+        <path d="M15 35v-20c0-2 1-3 2-4" stroke="currentColor" stroke-width="1" fill="none"/>
+        <ellipse cx="17" cy="10" rx="2.5" ry="6" opacity="0.6"/>
+        <ellipse cx="13" cy="12" rx="2" ry="5" opacity="0.4"/>
+        <ellipse cx="19" cy="15" rx="2" ry="5" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <div class="absolute top-8 right-4 opacity-35 hidden md:block">
+      <svg class="w-16 h-16 text-boho-dusty-rose" viewBox="0 0 25 25" fill="currentColor">
+        <circle cx="12.5" cy="12.5" r="2"/>
+        <ellipse cx="12.5" cy="6" rx="1.5" ry="3"/>
+        <ellipse cx="19" cy="12.5" rx="1.5" ry="3" transform="rotate(60 19 12.5)"/>
+        <ellipse cx="19" cy="19" rx="1.5" ry="3" transform="rotate(120 19 19)"/>
+        <ellipse cx="12.5" cy="19" rx="1.5" ry="3" transform="rotate(180 12.5 19)"/>
+        <ellipse cx="6" cy="19" rx="1.5" ry="3" transform="rotate(240 6 19)"/>
+        <ellipse cx="6" cy="12.5" rx="1.5" ry="3" transform="rotate(300 6 12.5)"/>
+      </svg>
+    </div>
+
+    <div class="text-center mb-8 md:mb-16 relative z-10">
       <h2 class="text-2xl md:text-3xl font-semibold mb-6 text-boho-brown-dark">Capture a Moment</h2>
       <p class="text-sm md:text-base opacity-70 text-boho-brown">
         Share your joy! Snap a photo and add it to our collective memory book.
       </p>
+      
+      <!-- Small floral accent under subtitle -->
+      <div class="flex justify-center mt-4">
+        <svg class="w-20 h-5 text-boho-dusty-rose opacity-60" viewBox="0 0 60 15" fill="currentColor">
+          <circle cx="10" cy="7.5" r="1"/>
+          <circle cx="20" cy="6" r="1"/>
+          <circle cx="30" cy="9" r="1.5"/>
+          <circle cx="40" cy="6" r="1"/>
+          <circle cx="50" cy="7.5" r="1"/>
+          <path d="M5 7.5c2-0.5 4-0.5 6 0M15 6c2-0.5 4-0.5 6 0M35 6c2-0.5 4-0.5 6 0M45 7.5c2-0.5 4-0.5 6 0" stroke="currentColor" stroke-width="0.5" fill="none"/>
+        </svg>
+      </div>
     </div>
 
-    <section class="capture-section w-full mb-12 md:mb-16">
+    <section class="capture-section w-full mb-12 md:mb-16 relative">
+      <!-- Decorative corner florals for the capture section -->
+      <div class="absolute -top-2 -left-2 opacity-40 z-0">
+        <svg class="w-14 h-14 text-boho-dusty-rose" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M2 18c2-1 4-2 6-4s3-4 4-6" stroke="currentColor" stroke-width="1" fill="none"/>
+          <circle cx="4" cy="16" r="1" opacity="0.7"/>
+          <circle cx="7" cy="13" r="1.2" opacity="0.6"/>
+          <circle cx="10" cy="10" r="1" opacity="0.7"/>
+          <circle cx="12" cy="8" r="0.8" opacity="0.5"/>
+        </svg>
+      </div>
+      
+      <div class="absolute -top-2 -right-2 opacity-40 z-0" style="transform: scaleX(-1)">
+        <svg class="w-14 h-14 text-boho-dusty-rose" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M2 18c2-1 4-2 6-4s3-4 4-6" stroke="currentColor" stroke-width="1" fill="none"/>
+          <circle cx="4" cy="16" r="1" opacity="0.7"/>
+          <circle cx="7" cy="13" r="1.2" opacity="0.6"/>
+          <circle cx="10" cy="10" r="1" opacity="0.7"/>
+          <circle cx="12" cy="8" r="0.8" opacity="0.5"/>
+        </svg>
+      </div>
       <!-- Camera preview when active -->
       <div v-if="showPreview" class="relative rounded-xl overflow-hidden shadow-lg bg-black mb-4">
         <video ref="videoPreview" autoplay playsinline muted class="w-full h-auto"></video>
@@ -84,6 +138,29 @@
         </button>
       </div>
     </section>
+
+    <!-- Decorative bottom florals -->
+    <div class="absolute bottom-16 left-8 opacity-25 hidden lg:block">
+      <svg class="w-24 h-18 text-boho-brown" viewBox="0 0 40 30" fill="currentColor">
+        <path d="M5 25c3-2 6-4 8-7s3-6 4-9c1-3 2-6 3-9" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <ellipse cx="8" cy="20" rx="2" ry="3" opacity="0.7"/>
+        <ellipse cx="12" cy="16" rx="2.5" ry="3.5" opacity="0.6"/>
+        <ellipse cx="16" cy="12" rx="2" ry="3" opacity="0.7"/>
+        <ellipse cx="19" cy="8" rx="1.5" ry="2.5" opacity="0.6"/>
+        <ellipse cx="21" cy="5" rx="1" ry="2" opacity="0.5"/>
+      </svg>
+    </div>
+
+    <div class="absolute bottom-16 right-8 opacity-25 hidden lg:block">
+      <svg class="w-20 h-15 text-boho-brown" viewBox="0 0 35 25" fill="currentColor" style="transform: scaleX(-1)">
+        <path d="M5 20c2-1 4-2 6-4s3-4 4-6c1-2 2-4 3-6" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <ellipse cx="7" cy="16" rx="1.5" ry="2.5" opacity="0.7"/>
+        <ellipse cx="10" cy="13" rx="2" ry="3" opacity="0.6"/>
+        <ellipse cx="13" cy="10" rx="1.5" ry="2.5" opacity="0.7"/>
+        <ellipse cx="16" cy="7" rx="1" ry="2" opacity="0.6"/>
+        <ellipse cx="18" cy="4" rx="0.8" ry="1.5" opacity="0.5"/>
+      </svg>
+    </div>
 
     <!-- Status messages -->
     <div v-if="statusMessage" class="w-full max-w-lg" :class="{

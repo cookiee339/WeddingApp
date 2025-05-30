@@ -7,12 +7,20 @@
   html {
     @apply font-body;
     background-color: #FFFBF0;
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(216, 160, 160, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(168, 181, 160, 0.02) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(197, 164, 145, 0.02) 0%, transparent 50%);
     color: #5D5550;
   }
   
   body {
     @apply font-sans antialiased;
     background-color: #FFFBF0;
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(216, 160, 160, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(168, 181, 160, 0.02) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(197, 164, 145, 0.02) 0%, transparent 50%);
     color: #5D5550;
   }
   
@@ -50,9 +58,35 @@
   }
 
   .photo-card {
-    @apply rounded-xl shadow-lg transition-transform duration-300 ease-in-out hover:scale-105;
+    @apply rounded-xl shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 relative overflow-hidden;
     background-color: #FFFDF7;
     aspect-ratio: 4/5;
+  }
+
+  .photo-card::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 24px;
+    height: 24px;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' fill='%23D8A0A0' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3Cellipse cx='10' cy='5' rx='1.5' ry='3'/%3E%3Cellipse cx='15' cy='10' rx='1.5' ry='3' transform='rotate(60 15 10)'/%3E%3Cellipse cx='15' cy='15' rx='1.5' ry='3' transform='rotate(120 15 15)'/%3E%3Cellipse cx='10' cy='15' rx='1.5' ry='3' transform='rotate(180 10 15)'/%3E%3Cellipse cx='5' cy='15' rx='1.5' ry='3' transform='rotate(240 5 15)'/%3E%3Cellipse cx='5' cy='10' rx='1.5' ry='3' transform='rotate(300 5 10)'/%3E%3C/svg%3E");
+    background-size: contain;
+    opacity: 0.5;
+    z-index: 1;
+  }
+
+  .photo-card::after {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    width: 28px;
+    height: 18px;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 25 15' fill='%23A8B5A0' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 12c2-1 4-2 6-4s3-4 4-6' stroke='%23A8B5A0' stroke-width='1' fill='none'/%3E%3Ccircle cx='7' cy='10' r='1' opacity='0.7'/%3E%3Ccircle cx='10' cy='7' r='1.2' opacity='0.6'/%3E%3Ccircle cx='13' cy='4' r='1' opacity='0.7'/%3E%3Ccircle cx='15' cy='2' r='0.8' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: contain;
+    opacity: 0.4;
+    z-index: 1;
   }
 
   .capture-section {
@@ -170,8 +204,36 @@
     background-color: #F5E8E8;
   }
 
-  .border-boho-rose-border {
+  .bg-boho-rose-border {
     border-color: #F0D0D0;
+  }
+
+  .bg-boho-sage {
+    background-color: #A8B5A0;
+  }
+
+  .bg-boho-sage-light {
+    background-color: #C8D5C0;
+  }
+
+  .text-boho-sage {
+    color: #A8B5A0;
+  }
+
+  .bg-boho-terracotta {
+    background-color: #C5A491;
+  }
+
+  .text-boho-terracotta {
+    color: #C5A491;
+  }
+
+  .bg-boho-lavender {
+    background-color: #B8A8C8;
+  }
+
+  .text-boho-lavender {
+    color: #B8A8C8;
   }
 }
 

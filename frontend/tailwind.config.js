@@ -16,6 +16,13 @@ module.exports = {
           'rose-light': '#F5E8E8', // Light rose for placeholders
           'rose-muted': '#E0B0B0', // Muted rose for icons
           'rose-border': '#F0D0D0', // Light borders
+          'sage': '#A8B5A0',     // Soft sage green for botanical elements
+          'sage-light': '#C8D5C0', // Light sage for backgrounds
+          'sage-muted': '#D0DCC8', // Very light sage for accents
+          'terracotta': '#C5A491', // Warm terracotta for floral variety
+          'terracotta-light': '#E5C4B1', // Light terracotta
+          'lavender': '#B8A8C8', // Soft lavender for floral accents
+          'lavender-light': '#D8C8E8', // Very light lavender
         },
         // Keep existing wedding colors for compatibility
         'wedding-primary': '#D8A0A0',
