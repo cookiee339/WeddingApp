@@ -2,31 +2,138 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles */
+/* Custom styles for boho wedding theme */
 @layer base {
   html {
     @apply font-body;
+    background-color: #FFFBF0;
+    color: #5D5550;
   }
+  
+  body {
+    @apply font-sans antialiased;
+    background-color: #FFFBF0;
+    color: #5D5550;
+  }
+  
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display;
+    @apply font-sans;
+    color: #4A403A;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-wedding-primary text-white py-2 px-4 rounded-lg shadow-md hover:bg-opacity-90 transition-all;
+    @apply py-3 px-8 rounded-lg shadow-md font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg;
+    background-color: #D8A0A0;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #C08080;
   }
   
   .btn-primary:disabled {
-    @apply bg-gray-400 cursor-not-allowed opacity-70;
+    @apply cursor-not-allowed opacity-70;
+    background-color: #E0B0B0;
+    transform: none;
   }
   
   .btn-secondary {
-    @apply bg-wedding-secondary text-white py-2 px-4 rounded-lg shadow-md hover:bg-opacity-90 transition-all;
+    @apply py-2 px-6 rounded-lg shadow-md font-medium transition-all duration-300 ease-in-out transform hover:scale-105;
+    background-color: #C08080;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background-color: #B07070;
   }
 
   .photo-card {
-    @apply bg-white rounded-lg shadow-md overflow-hidden;
+    @apply rounded-xl shadow-lg transition-transform duration-300 ease-in-out hover:scale-105;
+    background-color: #FFFDF7;
+    aspect-ratio: 4/5;
+  }
+
+  .capture-section {
+    @apply p-6 md:p-8 rounded-xl shadow-xl max-w-lg mx-auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(2px);
+  }
+
+  .gallery-placeholder {
+    @apply rounded-lg flex items-center justify-center;
+    background-color: #F5E8E8;
+  }
+
+  .gallery-placeholder-icon {
+    color: #E0B0B0;
+  }
+
+  .nav-link {
+    @apply py-2 px-4 font-medium transition-colors duration-200;
+  }
+
+  .nav-link:hover {
+    @apply opacity-80;
+  }
+
+  .router-link-active {
+    @apply border-b-2 font-bold;
+    border-color: #D8A0A0;
+  }
+
+  .modal-overlay {
+    @apply fixed inset-0 flex items-center justify-center z-50 p-4;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .status-success {
+    @apply p-3 rounded-lg;
+    background-color: #D4F8D4;
+    color: #2D5016;
+  }
+
+  .status-error {
+    @apply p-3 rounded-lg;
+    background-color: #FED7D7;
+    color: #C53030;
+  }
+
+  .status-info {
+    @apply p-3 rounded-lg;
+    background-color: #EBF8FF;
+    color: #2C5282;
+  }
+
+  .loading-spinner {
+    @apply animate-spin rounded-full border-b-2;
+    border-color: #D8A0A0;
+  }
+
+  .wedding-header {
+    @apply py-8 md:py-12 text-center;
+  }
+
+  .couple-names {
+    @apply font-script text-5xl md:text-6xl;
+    color: #4A403A;
+  }
+
+  .wedding-date {
+    @apply text-lg md:text-xl mt-2 opacity-80;
+  }
+
+  .page-title {
+    @apply text-2xl md:text-3xl font-semibold mt-4 tracking-tight;
+  }
+
+  .footer-border {
+    border-color: #F0D0D0;
+  }
+
+  .decorative-icons {
+    @apply flex justify-center items-center mt-4 opacity-50;
   }
 }
 
@@ -34,4 +141,65 @@
   .text-shadow {
     text-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
+
+  .backdrop-blur-xs {
+    backdrop-filter: blur(2px);
+  }
+
+  .bg-boho-cream {
+    background-color: #FFFBF0;
+  }
+
+  .bg-boho-offwhite {
+    background-color: #FFFDF7;
+  }
+
+  .text-boho-brown {
+    color: #5D5550;
+  }
+
+  .text-boho-brown-dark {
+    color: #4A403A;
+  }
+
+  .bg-boho-dusty-rose {
+    background-color: #D8A0A0;
+  }
+
+  .bg-boho-rose-light {
+    background-color: #F5E8E8;
+  }
+
+  .border-boho-rose-border {
+    border-color: #F0D0D0;
+  }
+}
+
+/* Transition animations */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5E8E8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D8A0A0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C08080;
 }

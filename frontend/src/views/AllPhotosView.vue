@@ -1,44 +1,44 @@
 <template>
   <div class="photo-gallery">
-    <div class="text-center mb-8">
-      <h2 class="text-3xl font-display text-wedding-dark mb-3">All Wedding Photos</h2>
-      <p class="text-lg text-gray-700">
+    <div class="text-center mb-8 md:mb-12">
+      <h2 class="text-2xl md:text-3xl font-semibold mb-6 text-boho-brown-dark">Shared Memories</h2>
+      <p class="text-sm md:text-base opacity-70 text-boho-brown">
         Explore all the beautiful moments captured during this celebration
       </p>
     </div>
 
     <!-- Loading indicator -->
     <div v-if="isLoading" class="flex justify-center my-8">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-wedding-primary"></div>
+      <div class="loading-spinner h-12 w-12"></div>
     </div>
 
     <!-- Error message -->
-    <div v-else-if="error" class="bg-red-100 text-red-800 p-4 rounded-lg my-4">
+    <div v-else-if="error" class="status-error my-4">
       {{ error }}
-      <button @click="fetchPhotos" class="underline ml-2">Try again</button>
+      <button @click="fetchPhotos" class="underline ml-2 hover:opacity-80">Try again</button>
     </div>
 
     <!-- No photos message -->
     <div v-else-if="photos.length === 0" class="text-center my-12">
-      <p class="text-xl text-gray-500 mb-4">No photos have been shared yet</p>
+      <p class="text-xl text-boho-brown opacity-70 mb-4">No photos have been shared yet</p>
       <router-link to="/" class="btn-primary inline-block">
         Be the first to share a photo
       </router-link>
     </div>
 
     <!-- Photos grid -->
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      <div v-for="photo in photos" :key="photo.photoId" class="photo-card">
-        <div class="relative pb-[100%] overflow-hidden bg-gray-100">
+    <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+      <div v-for="photo in photos" :key="photo.photoId" class="photo-card p-3 md:p-4">
+        <div class="w-full h-4/5 gallery-placeholder rounded-lg mb-3 overflow-hidden cursor-pointer">
           <img 
             :src="photo.imageUrl" 
             :alt="'Photo ' + photo.photoId" 
-            class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
             loading="lazy"
             @click="openPhotoModal(photo)"
           />
         </div>
-        <div class="p-2 text-xs text-gray-500">
+        <div class="text-sm text-center opacity-70 text-boho-brown truncate">
           {{ formatDate(photo.uploadedAt) }}
         </div>
       </div>
@@ -52,15 +52,15 @@
     </div>
 
     <!-- Photo Modal -->
-    <div v-if="selectedPhoto" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4" @click="closePhotoModal">
+    <div v-if="selectedPhoto" class="modal-overlay" @click="closePhotoModal">
       <div class="max-w-3xl max-h-[90vh] relative" @click.stop>
         <img 
           :src="selectedPhoto.imageUrl" 
           :alt="'Photo ' + selectedPhoto.photoId" 
-          class="max-h-[90vh] max-w-full object-contain rounded-lg"
+          class="max-h-[90vh] max-w-full object-contain rounded-xl"
         />
         <button 
-          class="absolute top-2 right-2 bg-black bg-opacity-50 text-white rounded-full p-2"
+          class="absolute top-2 right-2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 transition-all"
           @click="closePhotoModal"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

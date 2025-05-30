@@ -1,15 +1,15 @@
 <template>
   <div class="flex flex-col items-center justify-center pt-6">
-    <div class="text-center mb-8">
-      <h2 class="text-3xl font-display text-wedding-dark mb-3">Capture a Moment</h2>
-      <p class="text-lg text-gray-700">
-        Share your special moments from this wedding celebration
+    <div class="text-center mb-8 md:mb-16">
+      <h2 class="text-2xl md:text-3xl font-semibold mb-6 text-boho-brown-dark">Capture a Moment</h2>
+      <p class="text-sm md:text-base opacity-70 text-boho-brown">
+        Share your joy! Snap a photo and add it to our collective memory book.
       </p>
     </div>
 
-    <div class="photo-capture-area w-full max-w-md mb-8">
+    <section class="capture-section w-full mb-12 md:mb-16">
       <!-- Camera preview when active -->
-      <div v-if="showPreview" class="relative rounded-lg overflow-hidden shadow-lg bg-black mb-4">
+      <div v-if="showPreview" class="relative rounded-xl overflow-hidden shadow-lg bg-black mb-4">
         <video ref="videoPreview" autoplay playsinline muted class="w-full h-auto"></video>
         <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-3 flex justify-center">
           <button @click="capturePhoto" class="btn-secondary">
@@ -25,12 +25,12 @@
       </div>
 
       <!-- Captured photo preview -->
-      <div v-if="capturedImageUrl" class="relative rounded-lg overflow-hidden shadow-lg mb-4">
+      <div v-if="capturedImageUrl" class="relative rounded-xl overflow-hidden shadow-lg mb-4">
         <img :src="capturedImageUrl" alt="Captured photo" class="w-full h-auto" />
         <!-- Upload progress overlay -->
         <div v-if="isUploading" class="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center">
           <div class="text-center text-white max-w-xs">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+            <div class="loading-spinner h-12 w-12 mx-auto mb-4"></div>
             <p class="text-lg font-medium mb-3">{{ uploadMessage }}</p>
             <!-- Progress bar -->
             <div class="w-full bg-gray-600 rounded-full h-2 mb-2">
@@ -43,7 +43,7 @@
           </div>
         </div>
         <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-3 flex justify-between">
-          <button @click="discardPhoto" class="btn-secondary bg-gray-500">
+          <button @click="discardPhoto" class="btn-secondary" style="background-color: #9CA3AF;">
             Discard
           </button>
           <button @click="uploadPhoto" class="btn-primary" :disabled="isUploading">
@@ -63,12 +63,12 @@
 
       <!-- Photo capture button when preview not active -->
       <div v-if="!showPreview && !capturedImageUrl" class="flex flex-col items-center">
-        <label for="photo-input" class="btn-primary text-center cursor-pointer mb-3 flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <label for="photo-input" class="btn-primary text-center cursor-pointer mb-3 flex items-center text-lg md:text-xl">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
-          Take a Photo
+          Take Photo
         </label>
         <input 
           id="photo-input" 
@@ -78,18 +78,18 @@
           class="hidden"
           @change="handleFileInput" 
         />
-        <p class="text-sm text-gray-500">or</p>
-        <button @click="startCameraPreview" class="mt-3 text-wedding-primary underline">
+        <p class="text-sm text-boho-brown opacity-70">or</p>
+        <button @click="startCameraPreview" class="mt-3 text-boho-dusty-rose underline hover:opacity-80 transition-opacity">
           Use camera preview
         </button>
       </div>
-    </div>
+    </section>
 
     <!-- Status messages -->
-    <div v-if="statusMessage" class="w-full max-w-md p-3 rounded-lg" :class="{
-      'bg-green-100 text-green-800': statusType === 'success',
-      'bg-red-100 text-red-800': statusType === 'error',
-      'bg-blue-100 text-blue-800': statusType === 'info'
+    <div v-if="statusMessage" class="w-full max-w-lg" :class="{
+      'status-success': statusType === 'success',
+      'status-error': statusType === 'error',
+      'status-info': statusType === 'info'
     }">
       {{ statusMessage }}
     </div>

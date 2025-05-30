@@ -11,13 +11,13 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView,
-    meta: { title: 'Capture Photos' }
+    meta: { title: 'Capture a Moment' }
   },
   {
     path: '/all-photos',
     name: 'all-photos',
     component: AllPhotosView,
-    meta: { title: 'All Wedding Photos' }
+    meta: { title: 'Shared Memories' }
   },
   {
     path: '/my-photos',
@@ -35,7 +35,7 @@ const router = createRouter({
 
 // Update document title based on route
 router.beforeEach((to, from, next) => {
-  document.title = `${to.meta.title || 'Wedding Gallery'}`
+  document.title = `${to.meta.title || 'Barbara & Mikołaj'} - Wedding Photo Guestbook`
   next()
 })
 
