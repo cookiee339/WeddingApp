@@ -17,6 +17,7 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
+import kotlinx.serialization.Serializable
 import mu.KotlinLogging
 import java.util.UUID
 import kotlin.math.ceil
@@ -31,11 +32,13 @@ fun Application.configureRouting(cloudinaryService: CloudinaryService, photoServ
     val MAX_LIMIT = 100
 
     // Standard error response format
+    @Serializable
     data class ErrorResponse(val error: String, val details: String? = null)
 
     // Data classes for request/response
     data class DeletePhotoRequest(val uploader_id: String)
 
+    @Serializable
     data class PaginatedResponse<T>(
         val data: List<T>,
         val page: Int,
@@ -214,6 +217,8 @@ fun Application.configureRouting(cloudinaryService: CloudinaryService, photoServ
                     null
                 }
                 val uploaderId = request?.get("uploader_id")
+                
+                logger.info { "Delete request for photo $id: uploaderId from request = '$uploaderId'" }
 
                 // Get the photo first to get the Cloudinary URL
                 val photo = photoService.getPhotoById(id)
@@ -227,11 +232,14 @@ fun Application.configureRouting(cloudinaryService: CloudinaryService, photoServ
 
                 // Verify uploader ID if provided
                 if (uploaderId != null && photo.uploaderId != uploaderId) {
+                    logger.warn { "Upload ID mismatch: request='$uploaderId', photo='${photo.uploaderId}'" }
                     call.respond(
                         HttpStatusCode.Forbidden,
                         ErrorResponse("Access denied", "You don't have permission to delete this photo"),
                     )
                     return@delete
+                } else {
+                    logger.info { "Upload ID verification passed or skipped: request='$uploaderId', photo='${photo.uploaderId}'" }
                 }
 
                 // Delete from database

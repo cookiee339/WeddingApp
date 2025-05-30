@@ -43,8 +43,8 @@ fun main() {
 fun Application.module(cloudinaryService: CloudinaryService, photoService: PhotoService) {
     // Configure plugins
     configureSerialization()
-    configureRouting(cloudinaryService, photoService)
     configureCORS()
+    configureRouting(cloudinaryService, photoService)
     configureStatusPages()
 }
 

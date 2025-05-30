@@ -1,7 +1,5 @@
 package com.wedding.plugins
 
-import com.typesafe.config.ConfigFactory
-import io.github.config4k.extract
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.cors.routing.*
@@ -11,9 +9,6 @@ import io.ktor.server.plugins.cors.routing.*
  * * Allows the frontend to make requests to the backend when they're * hosted on different domains or ports.
  */
 fun Application.configureCORS() {
-    val config = ConfigFactory.load()
-    val corsConfig = config.extract<CorsConfig>("cors")
-
     install(CORS) {
         allowMethod(HttpMethod.Options)
         allowMethod(HttpMethod.Get)
@@ -22,20 +17,25 @@ fun Application.configureCORS() {
         allowMethod(HttpMethod.Delete)
         allowMethod(HttpMethod.Patch)
 
+        // Allow all hosts for development
+        anyHost()
+
         // Allow all requested headers
         allowHeaders { true }
+        
+        // Allow common headers explicitly
+        allowHeader(HttpHeaders.ContentType)
+        allowHeader(HttpHeaders.Authorization)
+        allowHeader("X-Requested-With")
 
-        // Process the cors configuration from application.conf
-        corsConfig.hosts.forEach { host ->
-            if (host == "*") {
-                anyHost()
-            } else {
-                allowHost(host)
-            }
-        }
+        // Allow credentials if needed
+        allowCredentials = false
 
         // Max age for preflight requests (in seconds)
-        maxAgeInSeconds = corsConfig.maxAge
+        maxAgeInSeconds = 3600
+        
+        // Ensure CORS headers are added to all responses, including error responses
+        allowNonSimpleContentTypes = true
     }
 }
 
