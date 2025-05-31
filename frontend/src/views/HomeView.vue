@@ -23,7 +23,7 @@
     </div>
 
     <div class="text-center mb-8 md:mb-16 relative z-10">
-      <h2 class="text-2xl md:text-3xl font-semibold mb-6 text-boho-brown-dark">Zrób Zdjęcie</h2>
+      <h2 class="text-2xl md:text-3xl font-semibold mb-6 text-boho-brown-dark">Wybierz zdjęcie z telefonu</h2>
       <p class="text-sm md:text-base opacity-70 text-boho-brown">
         Podziel się radością! Zrób zdjęcie i dodaj je do naszej wspólnej księgi wspomnień.
       </p>
@@ -277,7 +277,7 @@
               <!-- Small organic viewfinder -->
               <ellipse cx="17" cy="8" rx="0.8" ry="1" fill="currentColor" opacity="0.7"/>
             </svg>
-            Użyj Podglądu Kamery
+            Zrób zdjęcie
           </span>
         </button>
       </div>

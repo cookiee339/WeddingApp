@@ -4,6 +4,7 @@ import com.typesafe.config.ConfigFactory
 import com.wedding.config.CloudinaryConfig
 import com.wedding.config.DatabaseConfig
 import com.wedding.database.DatabaseFactory
+import com.wedding.plugins.configureAccessRoutes
 import com.wedding.plugins.configureCORS
 import com.wedding.plugins.configureRouting
 import com.wedding.plugins.configureSerialization
@@ -44,6 +45,7 @@ fun Application.module(cloudinaryService: CloudinaryService, photoService: Photo
     // Configure plugins
     configureSerialization()
     configureCORS()
+    configureAccessRoutes()
     configureRouting(cloudinaryService, photoService)
     configureStatusPages()
 }

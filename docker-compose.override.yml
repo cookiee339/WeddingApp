@@ -1,0 +1,131 @@
+version: '3.8'
+
+services:
+  # Development overrides for backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+      target: development
+    environment:
+      - SPRING_PROFILES_ACTIVE=development
+      - DATABASE_URL=jdbc:postgresql://database:5432/wedding_app_dev
+      - DATABASE_USER=wedding_user
+      - DATABASE_PASSWORD=wedding_password_2025
+      - CORS_ALLOWED_HOSTS=http://localhost:3000,http://localhost:5173,http://localhost:80
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      - "8080:8080"
+      - "5005:5005"  # Debug port
+    volumes:
+      - ./backend/src:/app/src:ro
+      - ./backend/build.gradle.kts:/app/build.gradle.kts:ro
+      - gradle_cache:/home/gradle/.gradle
+    command: ["./gradlew", "run", "--continuous"]
+
+  # Development overrides for frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+      target: development
+    environment:
+      - NODE_ENV=development
+      - VITE_API_BASE_URL=http://localhost:8080
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - "5173:5173"
+      - "24678:24678"  # Vite HMR port
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/index.html:/app/index.html
+      - ./frontend/vite.config.js:/app/vite.config.js
+      - ./frontend/package.json:/app/package.json
+      - node_modules_cache:/app/node_modules
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+
+  # Development overrides for QR service
+  qr-service:
+    build:
+      context: ./qr-service
+      dockerfile: Dockerfile.dev
+      target: development
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - API_URL=http://backend:8080
+      - FRONTEND_URL=http://localhost:5173
+    ports:
+      - "3000:3000"
+      - "9229:9229"  # Node.js debug port
+    volumes:
+      - ./qr-service:/app
+      - qr_node_modules:/app/node_modules
+      - qr_codes:/app/qr-codes
+    command: ["npm", "run", "dev"]
+
+  # Database with development settings
+  database:
+    environment:
+      POSTGRES_DB: wedding_app_dev
+      POSTGRES_USER: wedding_user
+      POSTGRES_PASSWORD: wedding_password_2025
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+
+  # Development tools
+  adminer:
+    image: adminer:latest
+    container_name: wedding_adminer
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    networks:
+      - wedding_network
+    depends_on:
+      - database
+
+  # Redis Commander for Redis management
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: wedding_redis_commander
+    restart: unless-stopped
+    environment:
+      - REDIS_HOSTS=local:redis:6379:0:wedding_redis_2025
+    ports:
+      - "8082:8081"
+    networks:
+      - wedding_network
+    depends_on:
+      - redis
+    profiles:
+      - redis-tools
+
+  # Mailhog for email testing
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: wedding_mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    networks:
+      - wedding_network
+    profiles:
+      - email-testing
+
+volumes:
+  postgres_dev_data:
+    driver: local
+    name: wedding_postgres_dev_data
+  gradle_cache:
+    driver: local
+    name: wedding_gradle_cache
+  node_modules_cache:
+    driver: local
+    name: wedding_frontend_node_modules
+  qr_node_modules:
+    driver: local
+    name: wedding_qr_node_modules

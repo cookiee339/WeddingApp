@@ -339,17 +339,27 @@
             </div>
         </div>
     </footer>
+
+    <!-- Access Control Component -->
+    <AccessControl />
 </template>
 
 <script setup>
 import { onMounted } from "vue";
 import { v4 as uuidv4 } from "uuid";
+import AccessControl from "./components/AccessControl.vue";
+import { useAccessStore } from "./stores/accessStore";
+
+const accessStore = useAccessStore();
 
 // Initialize unique user identifier if it doesn't exist
 onMounted(() => {
     if (!localStorage.getItem("uploader_id")) {
         localStorage.setItem("uploader_id", uuidv4());
     }
+    
+    // Check URL for access token and initialize access control
+    accessStore.checkURLAccess();
 });
 </script>
 

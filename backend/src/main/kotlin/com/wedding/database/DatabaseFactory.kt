@@ -2,6 +2,7 @@ package com.wedding.database
 
 import com.wedding.config.DatabaseConfig
 import com.wedding.database.tables.Photos
+import com.wedding.models.AccessTokens
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +33,7 @@ object DatabaseFactory {
 
         // Initialize tables
         transaction(database) {
-            SchemaUtils.create(Photos)
+            SchemaUtils.create(Photos, AccessTokens)
             logger.info { "Database tables initialized" }
         }
     }

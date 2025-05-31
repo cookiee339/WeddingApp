@@ -1,0 +1,61 @@
+FROM gradle:8.4-jdk21 as base
+
+WORKDIR /app
+
+# Install development tools
+RUN apt-get update && apt-get install -y \
+    curl \
+    vim \
+    procps \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy gradle files for dependency caching
+COPY build.gradle.kts settings.gradle.kts ./
+COPY gradle gradle
+COPY gradlew ./
+
+RUN chmod +x gradlew
+
+# Download dependencies (this layer will be cached)
+RUN ./gradlew dependencies --no-daemon
+
+# Development stage
+FROM base as development
+
+# Copy source code
+COPY src src
+
+# Enable Gradle daemon for faster builds
+ENV GRADLE_OPTS="-Dorg.gradle.daemon=true -Dorg.gradle.parallel=true -Dorg.gradle.configureondemand=true"
+
+# Expose application port and debug port
+EXPOSE 8080 5005
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:8080/api/access/codes || exit 1
+
+# Default command for development (can be overridden)
+CMD ["./gradlew", "run", "--continuous", "--no-daemon"]
+
+# Production stage (same as original Dockerfile)
+FROM base as production
+
+COPY src src
+
+RUN ./gradlew build --no-daemon -x test
+
+FROM openjdk:21-jdk-slim as runtime
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
+COPY --from=production /app/build/libs/*-all.jar app.jar
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8080/api/access/codes || exit 1
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

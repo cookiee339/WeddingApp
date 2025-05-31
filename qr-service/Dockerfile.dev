@@ -1,0 +1,64 @@
+FROM node:18-alpine as base
+
+WORKDIR /app
+
+# Install development tools and dependencies for canvas
+RUN apk add --no-cache \
+    curl \
+    git \
+    cairo-dev \
+    jpeg-dev \
+    pango-dev \
+    musl-dev \
+    giflib-dev \
+    pixman-dev \
+    pangomm-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
+    && rm -rf /var/cache/apk/*
+
+# Copy package files for dependency caching
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Development stage
+FROM base as development
+
+# Copy source code
+COPY . .
+
+# Create output directory for QR codes
+RUN mkdir -p /app/qr-codes
+
+# Set environment for development
+ENV NODE_ENV=development
+ENV PORT=3000
+
+# Expose service port and debug port
+EXPOSE 3000 9229
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=30s --retries=3 \
+  CMD curl -f http://localhost:3000/health || exit 1
+
+# Default command for development with debugging enabled
+CMD ["npm", "run", "dev"]
+
+# Production stage
+FROM base as production
+
+COPY . .
+
+RUN mkdir -p /app/qr-codes
+
+ENV NODE_ENV=production
+ENV PORT=3000
+
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3000/health || exit 1
+
+CMD ["npm", "start"]

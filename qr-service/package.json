@@ -1,0 +1,31 @@
+{
+  "name": "wedding-qr-service",
+  "version": "1.0.0",
+  "description": "QR Code Generator Web Service for Barbara & Mikołaj Wedding Photo App",
+  "main": "qr-web-service.js",
+  "private": true,
+  "scripts": {
+    "start": "node qr-web-service.js",
+    "dev": "nodemon qr-web-service.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "qrcode": "^1.5.3",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "qr-code",
+    "wedding",
+    "generator",
+    "api",
+    "express"
+  ],
+  "author": "Wedding Organizers",
+  "license": "ISC"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "wedding-qr-generator",
+  "version": "1.0.0",
+  "description": "QR Code Generator for Barbara & Mikołaj Wedding Photo App",
+  "main": "qr-generator.js",
+  "private": true,
+  "scripts": {
+    "generate": "node qr-generator.js",
+    "start": "node qr-generator.js",
+    "test": "node test-access.js"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "qr-code",
+    "wedding",
+    "access-control"
+  ],
+  "author": "Wedding Organizers",
+  "license": "ISC"
+}
