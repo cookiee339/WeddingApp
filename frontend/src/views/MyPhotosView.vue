@@ -9,7 +9,22 @@
 
     <!-- Loading indicator -->
     <div v-if="isLoading" class="flex justify-center my-8">
-      <div class="loading-spinner h-12 w-12"></div>
+      <div class="boho-gallery-spinner h-12 w-12">
+        <svg class="w-full h-full" viewBox="0 0 40 40">
+          <!-- Organic flower-like spinner -->
+          <g class="boho-spinner-petals" transform-origin="20 20">
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.9"/>
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.7" transform="rotate(45 20 20)"/>
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.5" transform="rotate(90 20 20)"/>
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.3" transform="rotate(135 20 20)"/>
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.2" transform="rotate(180 20 20)"/>
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.1" transform="rotate(225 20 20)"/>
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.1" transform="rotate(270 20 20)"/>
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.2" transform="rotate(315 20 20)"/>
+          </g>
+          <circle cx="20" cy="20" r="2" fill="#D8A0A0" opacity="0.6"/>
+        </svg>
+      </div>
     </div>
 
     <!-- Error message -->
@@ -42,8 +57,16 @@
             @click.stop="deletePhoto(photo.photoId)"
             title="Usuń zdjęcie"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+              <!-- Organic basket/container -->
+              <path d="M4 6.5c0-0.4 0.2-0.8 0.6-1C5 5.3 5.4 5.2 6 5.2h8c0.6 0 1 0.1 1.4 0.3s0.6 0.6 0.6 1l-0.8 9c-0.1 0.8-0.5 1.4-1 1.8s-1.2 0.6-1.8 0.6H8.6c-0.6 0-1.3-0.2-1.8-0.6s-0.9-1-1-1.8L4 6.5z" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+              <!-- Organic lid/top -->
+              <path d="M3.5 6c0-0.2 0.1-0.4 0.4-0.4h12.2c0.3 0 0.4 0.2 0.4 0.4s-0.1 0.4-0.4 0.4H3.9c-0.3 0-0.4-0.2-0.4-0.4z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+              <!-- Handle/grip - flowing lines -->
+              <path d="M8 4.2c0-0.8 0.4-1.4 1-1.8C9.5 2 10 1.8 10.6 1.8h1.8c0.6 0 1.1 0.2 1.6 0.6s0.8 1 0.8 1.8" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+              <!-- Content lines - organic -->
+              <path d="M8.5 9c0 0.4 0 2 0 3.2s0 2 0 2.4" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.7"/>
+              <path d="M11.5 9c0 0.4 0 2 0 3.2s0 2 0 2.4" stroke="currentColor" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.7"/>
             </svg>
           </button>
         </div>
@@ -72,8 +95,9 @@
           class="absolute top-2 right-2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 transition-all"
           @click="closePhotoModal"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2c-1.5 0-2.8 0.3-4 1.2-1.2 0.9-2 2.1-2.5 3.8-0.3 1-0.3 2 0 3 0.5 1.7 1.3 2.9 2.5 3.8 1.2 0.9 2.5 1.2 4 1.2s2.8-0.3 4-1.2c1.2-0.9 2-2.1 2.5-3.8 0.3-1 0.3-2 0-3-0.5-1.7-1.3-2.9-2.5-3.8-1.2-0.9-2.5-1.2-4-1.2z" opacity="0.1"/>
+            <path d="M8.5 8.5c0.3-0.3 0.7-0.3 1 0l2.5 2.5 2.5-2.5c0.3-0.3 0.7-0.3 1 0s0.3 0.7 0 1l-2.5 2.5 2.5 2.5c0.3 0.3 0.3 0.7 0 1s-0.7 0.3-1 0l-2.5-2.5-2.5 2.5c-0.3 0.3-0.7 0.3-1 0s-0.3-0.7 0-1l2.5-2.5-2.5-2.5c-0.3-0.3-0.3-0.7 0-1z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
           </svg>
         </button>
         <div class="absolute bottom-2 left-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded">
@@ -248,3 +272,69 @@ onMounted(() => {
   fetchMyPhotos();
 });
 </script>
+
+<style scoped>
+/* Boho-style spinner animations */
+.boho-gallery-spinner .boho-spinner-petals {
+  animation: boho-spin 2s linear infinite;
+}
+
+@keyframes boho-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Organic transitions for buttons */
+.touch-manipulation {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Enhanced organic hover effects */
+.photo-card {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.photo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(139, 117, 102, 0.15);
+}
+
+/* Organic modal transitions */
+.modal-overlay {
+  backdrop-filter: blur(4px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Soft organic shadows */
+.shadow-xl {
+  box-shadow: 0 12px 30px rgba(139, 117, 102, 0.2), 
+              0 6px 15px rgba(139, 117, 102, 0.1);
+}
+
+/* Button hover effects */
+.btn-primary:hover,
+.btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(216, 160, 160, 0.3);
+}
+
+/* Organic delete button styling */
+.bg-red-600:hover {
+  background-color: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+/* Smooth organic transitions */
+* {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+</style>

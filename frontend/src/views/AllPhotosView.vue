@@ -12,8 +12,14 @@
           <span>{{ photos.length }} {{ photos.length === 1 ? 'zdjęcie' : 'zdjęć' }}</span>
         </div>
         <button @click="refreshPhotos" class="flex items-center space-x-1 text-boho-dusty-rose hover:opacity-80 transition-opacity touch-manipulation">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <!-- Organic refresh with flowing petals -->
+            <path d="M10 2c-2 0-3.5 0.8-4.5 2s-1.5 2.8-1.5 4.5c0 1.7 0.5 3.5 1.5 4.5s2.5 2 4.5 2c2 0 3.5-0.8 4.5-2" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            <path d="M14 6c0.5-0.5 1-0.8 1.5-0.8s1 0.3 1.5 0.8" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            <!-- Small organic arrow -->
+            <ellipse cx="15.5" cy="5" rx="0.8" ry="1.2" transform="rotate(45 15.5 5)" fill="currentColor" opacity="0.8"/>
+            <!-- Center dot -->
+            <circle cx="10" cy="10" r="1" fill="currentColor" opacity="0.6"/>
           </svg>
           <span>Odśwież</span>
         </button>
@@ -22,7 +28,22 @@
 
     <!-- Loading indicator -->
     <div v-if="isLoading" class="flex justify-center my-8">
-      <div class="loading-spinner h-12 w-12"></div>
+      <div class="boho-gallery-spinner h-12 w-12">
+        <svg class="w-full h-full" viewBox="0 0 40 40">
+          <!-- Organic flower-like spinner -->
+          <g class="boho-spinner-petals" transform-origin="20 20">
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.9"/>
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.7" transform="rotate(45 20 20)"/>
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.5" transform="rotate(90 20 20)"/>
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.3" transform="rotate(135 20 20)"/>
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.2" transform="rotate(180 20 20)"/>
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.1" transform="rotate(225 20 20)"/>
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.1" transform="rotate(270 20 20)"/>
+            <ellipse cx="20" cy="6" rx="1.5" ry="4" fill="#D8A0A0" opacity="0.2" transform="rotate(315 20 20)"/>
+          </g>
+          <circle cx="20" cy="20" r="2" fill="#D8A0A0" opacity="0.6"/>
+        </svg>
+      </div>
     </div>
 
     <!-- Error message -->
@@ -95,8 +116,12 @@
             @click="previousPhoto"
             class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 transition-all touch-manipulation hidden sm:block"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+              <!-- Organic left arrow with flowing curves -->
+              <path d="M16 6c-1.5 1.5-3 3-4.5 4.5s-3 3-4.5 4.5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+              <path d="M9 10c-0.8 0.8-1.2 1.8-1.2 3s0.4 2.2 1.2 3" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+              <!-- Organic arrow head -->
+              <ellipse cx="8" cy="12" rx="1.2" ry="1.8" transform="rotate(-45 8 12)" fill="currentColor" opacity="0.9"/>
             </svg>
           </button>
           
@@ -105,8 +130,12 @@
             @click="nextPhoto"
             class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 transition-all touch-manipulation hidden sm:block"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+              <!-- Organic right arrow with flowing curves -->
+              <path d="M8 6c1.5 1.5 3 3 4.5 4.5s3 3 4.5 4.5" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+              <path d="M15 10c0.8 0.8 1.2 1.8 1.2 3s-0.4 2.2-1.2 3" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+              <!-- Organic arrow head -->
+              <ellipse cx="16" cy="12" rx="1.2" ry="1.8" transform="rotate(45 16 12)" fill="currentColor" opacity="0.9"/>
             </svg>
           </button>
         </div>
@@ -123,8 +152,9 @@
             @click="closePhotoModal"
             class="bg-black/50 hover:bg-black/70 text-white rounded-full p-3 transition-all touch-manipulation"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2c-1.5 0-2.8 0.3-4 1.2-1.2 0.9-2 2.1-2.5 3.8-0.3 1-0.3 2 0 3 0.5 1.7 1.3 2.9 2.5 3.8 1.2 0.9 2.5 1.2 4 1.2s2.8-0.3 4-1.2c1.2-0.9 2-2.1 2.5-3.8 0.3-1 0.3-2 0-3-0.5-1.7-1.3-2.9-2.5-3.8-1.2-0.9-2.5-1.2-4-1.2z" opacity="0.1"/>
+              <path d="M8.5 8.5c0.3-0.3 0.7-0.3 1 0l2.5 2.5 2.5-2.5c0.3-0.3 0.7-0.3 1 0s0.3 0.7 0 1l-2.5 2.5 2.5 2.5c0.3 0.3 0.3 0.7 0 1s-0.7 0.3-1 0l-2.5-2.5-2.5 2.5c-0.3 0.3-0.7 0.3-1 0s-0.3-0.7 0-1l2.5-2.5-2.5-2.5c-0.3-0.3-0.3-0.7 0-1z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
             </svg>
           </button>
         </div>
@@ -138,8 +168,17 @@
               @click="sharePhoto(selectedPhoto)"
               class="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-full p-4 transition-all transform active:scale-95 touch-manipulation"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+                <!-- Organic share with flowing connections -->
+                <circle cx="6" cy="12" r="2.5" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.8"/>
+                <circle cx="18" cy="8" r="2.5" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.8"/>
+                <circle cx="18" cy="16" r="2.5" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.8"/>
+                <!-- Flowing connection lines -->
+                <path d="M8 11c2 0 4-1 6-2s4-1 6-1" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.9"/>
+                <path d="M8 13c2 0 4 1 6 2s4 1 6 1" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" opacity="0.9"/>
+                <!-- Small heart accents -->
+                <ellipse cx="12" cy="9" rx="0.8" ry="1" fill="currentColor" opacity="0.6"/>
+                <ellipse cx="12" cy="15" rx="0.8" ry="1" fill="currentColor" opacity="0.6"/>
               </svg>
             </button>
             
@@ -148,8 +187,16 @@
               @click="downloadPhoto(selectedPhoto)"
               class="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-full p-4 transition-all transform active:scale-95 touch-manipulation"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+                <!-- Organic document with flowing download arrow -->
+                <path d="M7 4c0-1 0.5-1.8 1.2-2.3C8.9 1.2 9.7 1 10.5 1h3c0.8 0 1.6 0.2 2.3 0.7s1.2 1.3 1.2 2.3v15c0 1-0.5 1.8-1.2 2.3s-1.5 0.7-2.3 0.7h-6c-0.8 0-1.6-0.2-2.3-0.7S5 19.8 5 19V6c0-1 0.5-1.8 1.2-2.3S7.2 3 8 3" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+                <!-- Flowing downward arrow -->
+                <path d="M12 7c0 1.5 0 3 0 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <path d="M10 10c0.5 0.8 1.2 1.2 2 1.2s1.5-0.4 2-1.2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <!-- Organic heart at arrow tip -->
+                <ellipse cx="12" cy="12.5" rx="1" ry="1.2" fill="currentColor" opacity="0.8"/>
+                <!-- Document fold -->
+                <path d="M14 3c0.5 0.5 1 1 1.5 1.5S16.5 5.5 17 6" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.7"/>
               </svg>
             </button>
           </div>

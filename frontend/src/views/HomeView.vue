@@ -41,6 +41,9 @@
       </div>
     </div>
 
+    <!-- Photo Prompts Section -->
+    <PhotoPrompts ref="photoPromptsRef" class="max-w-lg mx-auto mb-8" />
+
     <section class="capture-section w-full mb-12 md:mb-16 relative">
       <!-- Decorative corner florals for the capture section -->
       <div class="absolute -top-2 -left-2 opacity-40 z-0">
@@ -84,21 +87,37 @@
         <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 pointer-events-auto">
           <div class="flex justify-between items-center">
             <button @click="stopCameraPreview" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white rounded-full p-3 transition-all touch-manipulation">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2c-1.5 0-2.8 0.3-4 1.2-1.2 0.9-2 2.1-2.5 3.8-0.3 1-0.3 2 0 3 0.5 1.7 1.3 2.9 2.5 3.8 1.2 0.9 2.5 1.2 4 1.2s2.8-0.3 4-1.2c1.2-0.9 2-2.1 2.5-3.8 0.3-1 0.3-2 0-3-0.5-1.7-1.3-2.9-2.5-3.8-1.2-0.9-2.5-1.2-4-1.2z" opacity="0.1"/>
+                <path d="M8.5 8.5c0.3-0.3 0.7-0.3 1 0l2.5 2.5 2.5-2.5c0.3-0.3 0.7-0.3 1 0s0.3 0.7 0 1l-2.5 2.5 2.5 2.5c0.3 0.3 0.3 0.7 0 1s-0.7 0.3-1 0l-2.5-2.5-2.5 2.5c-0.3 0.3-0.7 0.3-1 0s-0.3-0.7 0-1l2.5-2.5-2.5-2.5c-0.3-0.3-0.3-0.7 0-1z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
               </svg>
             </button>
             <!-- Large capture button -->
             <button @click="capturePhoto" class="bg-white hover:bg-gray-100 text-gray-800 rounded-full p-6 shadow-lg transition-all transform active:scale-95 touch-manipulation">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              <svg class="h-8 w-8" viewBox="0 0 32 32" fill="currentColor">
+                <!-- Camera body - organic rounded rectangle -->
+                <path d="M5 11c0-2 1-3.5 2.5-4.5C8.5 5.5 10 5 12 5h8c2 0 3.5 0.5 4.5 1.5S26 9 26 11v10c0 2-1 3.5-2.5 4.5S20 27 18 27H12c-2 0-3.5-0.5-4.5-1.5S5 23 5 21V11z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <!-- Lens - hand-drawn circle -->
+                <circle cx="16" cy="16" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <circle cx="16" cy="16" r="2.5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/>
+                <!-- Viewfinder - organic shape -->
+                <path d="M10 8c0-1 0.5-1.5 1-2h2c1 0 1.5 0.5 2 1" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <!-- Flash - small organic dot -->
+                <ellipse cx="22" cy="9" rx="1" ry="1.2" fill="currentColor" opacity="0.7"/>
               </svg>
             </button>
             <!-- Switch camera button (for devices with multiple cameras) -->
             <button @click="switchCamera" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white rounded-full p-3 transition-all touch-manipulation">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+                <!-- Two camera lenses with organic swap arrows -->
+                <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.8"/>
+                <circle cx="16" cy="16" r="3" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.8"/>
+                <!-- Organic flowing arrows -->
+                <path d="M11 6c1-0.5 2-0.5 3 0c1 0.5 2 1.5 2.5 2.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <path d="M13 18c-1 0.5-2 0.5-3 0c-1-0.5-2-1.5-2.5-2.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <!-- Arrow heads - organic teardrop shapes -->
+                <ellipse cx="17" cy="7.5" rx="0.8" ry="1.2" transform="rotate(45 17 7.5)" fill="currentColor" opacity="0.9"/>
+                <ellipse cx="7" cy="16.5" rx="0.8" ry="1.2" transform="rotate(-135 7 16.5)" fill="currentColor" opacity="0.9"/>
               </svg>
             </button>
           </div>
@@ -108,11 +127,27 @@
       <!-- Captured photo preview -->
       <div v-if="capturedImageUrl" class="space-y-4">
         <div class="relative rounded-xl overflow-hidden shadow-lg max-h-[50vh]">
+          <!-- Przechwycone zdjęcie -->
           <img :src="capturedImageUrl" alt="Przechwycone zdjęcie" class="w-full h-full object-cover" />
           <!-- Upload progress overlay -->
           <div v-if="isUploading" class="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center">
             <div class="text-center text-white max-w-xs px-4">
-              <div class="loading-spinner h-16 w-16 mx-auto mb-6"></div>
+              <div class="boho-spinner h-16 w-16 mx-auto mb-6">
+                <svg class="w-full h-full" viewBox="0 0 50 50">
+                  <!-- Organic flower-like spinner -->
+                  <g class="boho-spinner-petals" transform-origin="25 25">
+                    <ellipse cx="25" cy="8" rx="2" ry="6" fill="white" opacity="0.9"/>
+                    <ellipse cx="25" cy="8" rx="2" ry="6" fill="white" opacity="0.7" transform="rotate(45 25 25)"/>
+                    <ellipse cx="25" cy="8" rx="2" ry="6" fill="white" opacity="0.5" transform="rotate(90 25 25)"/>
+                    <ellipse cx="25" cy="8" rx="2" ry="6" fill="white" opacity="0.3" transform="rotate(135 25 25)"/>
+                    <ellipse cx="25" cy="8" rx="2" ry="6" fill="white" opacity="0.2" transform="rotate(180 25 25)"/>
+                    <ellipse cx="25" cy="8" rx="2" ry="6" fill="white" opacity="0.1" transform="rotate(225 25 25)"/>
+                    <ellipse cx="25" cy="8" rx="2" ry="6" fill="white" opacity="0.1" transform="rotate(270 25 25)"/>
+                    <ellipse cx="25" cy="8" rx="2" ry="6" fill="white" opacity="0.2" transform="rotate(315 25 25)"/>
+                  </g>
+                  <circle cx="25" cy="25" r="3" fill="white" opacity="0.6"/>
+                </svg>
+              </div>
               <p class="text-xl font-medium mb-4">{{ uploadMessage }}</p>
               <!-- Progress bar -->
               <div class="w-full bg-gray-600 rounded-full h-3 mb-3">
@@ -149,20 +184,43 @@
         <div class="flex gap-4">
           <button @click="discardPhoto" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 px-6 rounded-xl font-semibold transition-all transform active:scale-95 touch-manipulation">
             <span class="flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              <svg class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                <!-- Organic basket/container -->
+                <path d="M5.5 8c0-0.5 0.3-1 0.8-1.3C6.8 6.4 7.3 6.2 8 6.2h8c0.7 0 1.2 0.2 1.7 0.5s0.8 0.8 0.8 1.3l-1 11c-0.1 1-0.6 1.8-1.3 2.3s-1.5 0.7-2.2 0.7H10c-0.7 0-1.5-0.2-2.2-0.7s-1.2-1.3-1.3-2.3L5.5 8z" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+                <!-- Organic lid/top -->
+                <path d="M4.5 7.5c0-0.3 0.2-0.5 0.5-0.5h14c0.3 0 0.5 0.2 0.5 0.5s-0.2 0.5-0.5 0.5H5c-0.3 0-0.5-0.2-0.5-0.5z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <!-- Handle/grip - flowing lines -->
+                <path d="M10 5c0-1 0.5-1.8 1.2-2.3C11.9 2.2 12.4 2 13 2h2c0.6 0 1.1 0.2 1.8 0.7C17.5 3.2 18 4 18 5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+                <!-- Content lines - organic -->
+                <path d="M10.5 11c0 0.5 0 2.5 0 4s0 2.5 0 3" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.7"/>
+                <path d="M13.5 11c0 0.5 0 2.5 0 4s0 2.5 0 3" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.7"/>
               </svg>
               Odrzuć
             </span>
           </button>
           <button @click="uploadPhoto" class="flex-2 bg-boho-dusty-rose hover:bg-boho-dusty-rose-dark text-white py-4 px-8 rounded-xl font-bold transition-all transform active:scale-95 touch-manipulation shadow-lg" :disabled="isUploading">
             <span v-if="isUploading" class="flex items-center justify-center">
-              <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+              <div class="boho-mini-spinner h-5 w-5 mr-2">
+                <svg class="w-full h-full" viewBox="0 0 20 20">
+                  <g class="boho-spinner-petals" transform-origin="10 10">
+                    <ellipse cx="10" cy="3" rx="1" ry="3" fill="white" opacity="0.9"/>
+                    <ellipse cx="10" cy="3" rx="1" ry="3" fill="white" opacity="0.6" transform="rotate(90 10 10)"/>
+                    <ellipse cx="10" cy="3" rx="1" ry="3" fill="white" opacity="0.3" transform="rotate(180 10 10)"/>
+                    <ellipse cx="10" cy="3" rx="1" ry="3" fill="white" opacity="0.1" transform="rotate(270 10 10)"/>
+                  </g>
+                </svg>
+              </div>
               Przesyłanie...
             </span>
             <span v-else class="flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              <svg class="h-5 w-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                <!-- Organic cloud shape -->
+                <path d="M6.5 15c-1.5 0-2.8-0.6-3.7-1.5S1.5 11.5 1.5 10c0-1.5 0.6-2.8 1.5-3.8s2.3-1.5 3.8-1.5c0.3-1.2 0.9-2.2 1.8-3C9.5 0.9 10.7 0.5 12 0.5s2.5 0.4 3.4 1.2c0.9 0.8 1.5 1.8 1.8 3 1.5 0 2.8 0.5 3.8 1.5s1.5 2.3 1.5 3.8c0 1.5-0.5 2.8-1.5 3.8s-2.3 1.2-3.8 1.2" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+                <!-- Organic upward arrow -->
+                <path d="M12 20.5c0-2 0-4 0-6" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <path d="M9 16c0.8-0.8 1.8-1.2 3-1.2s2.2 0.4 3 1.2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <!-- Flowing heart shape at top -->
+                <path d="M11 13.5c0.3-0.3 0.7-0.5 1-0.5s0.7 0.2 1 0.5c0.3 0.3 0.3 0.7 0 1s-0.7 0.3-1 0-0.7-0.3-1 0s-0.3-0.7 0-1z" fill="currentColor" opacity="0.8"/>
               </svg>
               🎉 Udostępnij Zdjęcie
             </span>
@@ -175,9 +233,16 @@
         <!-- Primary action: Take photo directly -->
         <label for="photo-input" class="w-full bg-boho-dusty-rose hover:bg-boho-dusty-rose-dark text-white py-6 px-8 rounded-2xl text-center cursor-pointer font-bold text-xl transition-all transform active:scale-95 touch-manipulation shadow-lg">
           <span class="flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0118.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+            <svg class="h-8 w-8 mr-3" viewBox="0 0 32 32" fill="currentColor">
+              <!-- Camera body - organic rounded rectangle -->
+              <path d="M5 11c0-2 1-3.5 2.5-4.5C8.5 5.5 10 5 12 5h8c2 0 3.5 0.5 4.5 1.5S26 9 26 11v10c0 2-1 3.5-2.5 4.5S20 27 18 27H12c-2 0-3.5-0.5-4.5-1.5S5 23 5 21V11z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <!-- Lens - hand-drawn circle -->
+              <circle cx="16" cy="16" r="5" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              <circle cx="16" cy="16" r="2.5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.6"/>
+              <!-- Viewfinder - organic shape -->
+              <path d="M10 8c0-1 0.5-1.5 1-2h2c1 0 1.5 0.5 2 1" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <!-- Flash - small organic dot -->
+              <ellipse cx="22" cy="9" rx="1" ry="1.2" fill="currentColor" opacity="0.7"/>
             </svg>
             📸 Zrób Zdjęcie
           </span>
@@ -201,18 +266,22 @@
         <!-- Secondary action: Camera preview -->
         <button @click="startCameraPreview" class="w-full bg-white border-2 border-boho-dusty-rose text-boho-dusty-rose py-4 px-6 rounded-xl font-semibold transition-all transform active:scale-95 touch-manipulation">
           <span class="flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            <svg class="h-6 w-6 mr-2" viewBox="0 0 28 28" fill="currentColor">
+              <!-- Video camera body - organic rounded shape -->
+              <path d="M4 9c0-1.5 0.5-2.5 1.5-3.2C6.5 5.3 7.7 5 9 5h6c1.3 0 2.5 0.3 3.5 1.8S20 8.5 20 10v8c0 1.5-0.5 2.5-1.5 3.2s-2.2 0.8-3.5 0.8H9c-1.3 0-2.5-0.3-3.5-0.8S4 19.5 4 18V9z" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+              <!-- Lens - organic circle -->
+              <circle cx="12" cy="14" r="3.5" stroke="currentColor" stroke-width="1.2" fill="none" opacity="0.8"/>
+              <circle cx="12" cy="14" r="1.8" stroke="currentColor" stroke-width="0.8" fill="none" opacity="0.6"/>
+              <!-- Recording indicator - organic triangular play shape -->
+              <path d="M21 11c0.8 0.4 1.2 1 1.2 1.8v2.4c0 0.8-0.4 1.4-1.2 1.8l-1.5-3z" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+              <!-- Small organic viewfinder -->
+              <ellipse cx="17" cy="8" rx="0.8" ry="1" fill="currentColor" opacity="0.7"/>
             </svg>
             Użyj Podglądu Kamery
           </span>
         </button>
       </div>
     </section>
-
-    <!-- Photo Prompts Section -->
-    <PhotoPrompts ref="photoPromptsRef" class="max-w-lg mx-auto mb-8" />
-
 
     <!-- Decorative bottom florals -->
     <div class="absolute bottom-16 left-8 opacity-25 hidden lg:block">
@@ -605,3 +674,98 @@ onUnmounted(() => {
   stopCameraPreview();
 });
 </script>
+
+<style scoped>
+/* Boho-style spinner animations */
+.boho-spinner .boho-spinner-petals {
+  animation: boho-spin 2s linear infinite;
+}
+
+.boho-mini-spinner .boho-spinner-petals {
+  animation: boho-spin 1.5s linear infinite;
+}
+
+@keyframes boho-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Organic transitions for buttons */
+.touch-manipulation {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Enhanced organic hover effects */
+.bg-boho-dusty-rose:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(216, 160, 160, 0.3);
+}
+
+.bg-white:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Organic progress bar */
+.bg-white.h-3.rounded-full {
+  background: linear-gradient(90deg, #ffffff 0%, #f8f5f5 50%, #ffffff 100%);
+  animation: progress-flow 2s ease-in-out infinite;
+}
+
+@keyframes progress-flow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Soft organic shadows */
+.shadow-lg {
+  box-shadow: 0 10px 25px rgba(139, 117, 102, 0.15), 
+              0 4px 10px rgba(139, 117, 102, 0.1);
+}
+
+.shadow-md {
+  box-shadow: 0 6px 15px rgba(139, 117, 102, 0.12), 
+              0 2px 6px rgba(139, 117, 102, 0.08);
+}
+
+/* Organic border radius variations */
+.rounded-xl {
+  border-radius: 0.875rem;
+}
+
+.rounded-2xl {
+  border-radius: 1.125rem;
+}
+
+/* Decorative SVG hover effects */
+.text-boho-dusty-rose {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.text-boho-dusty-rose:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* Organic input focus states */
+.border-boho-rose-border:focus {
+  box-shadow: 0 0 0 3px rgba(216, 160, 160, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Smooth organic transitions */
+* {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+</style>
