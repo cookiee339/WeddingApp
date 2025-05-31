@@ -32,13 +32,22 @@
 
 @layer components {
   .btn-primary {
-    @apply py-3 px-8 rounded-lg shadow-md font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg;
+    @apply py-4 px-8 rounded-xl shadow-lg font-semibold transition-all duration-300 ease-in-out transform active:scale-95 touch-manipulation;
     background-color: #D8A0A0;
     color: white;
+    min-height: 44px; /* iOS minimum touch target */
+    min-width: 44px;
+    font-size: 1.1rem;
   }
   
   .btn-primary:hover {
     background-color: #C08080;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(216, 160, 160, 0.3);
+  }
+  
+  .btn-primary:active {
+    transform: translateY(0) scale(0.95);
   }
   
   .btn-primary:disabled {
@@ -48,19 +57,33 @@
   }
   
   .btn-secondary {
-    @apply py-2 px-6 rounded-lg shadow-md font-medium transition-all duration-300 ease-in-out transform hover:scale-105;
+    @apply py-3 px-6 rounded-xl shadow-md font-medium transition-all duration-300 ease-in-out transform active:scale-95 touch-manipulation;
     background-color: #C08080;
     color: white;
+    min-height: 44px;
+    min-width: 44px;
   }
 
   .btn-secondary:hover {
     background-color: #B07070;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary:active {
+    transform: translateY(0) scale(0.95);
   }
 
   .photo-card {
-    @apply rounded-xl shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 relative overflow-hidden;
+    @apply rounded-xl shadow-lg transition-all duration-300 ease-in-out active:scale-95 relative overflow-hidden touch-manipulation;
     background-color: #FFFDF7;
-    aspect-ratio: 4/5;
+    aspect-ratio: 1/1;
+  }
+
+  @media (hover: hover) {
+    .photo-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
   }
 
   .photo-card::before {
@@ -118,8 +141,16 @@
   }
 
   .modal-overlay {
-    @apply fixed inset-0 flex items-center justify-center z-50 p-4;
-    background-color: rgba(0, 0, 0, 0.8);
+    @apply fixed inset-0 flex items-center justify-center z-50;
+    background-color: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(4px);
+    padding: env(safe-area-inset-top, 1rem) env(safe-area-inset-right, 1rem) env(safe-area-inset-bottom, 1rem) env(safe-area-inset-left, 1rem);
+  }
+
+  @media (max-width: 640px) {
+    .modal-overlay {
+      padding: 0.5rem;
+    }
   }
 
   .status-success {
@@ -146,20 +177,22 @@
   }
 
   .wedding-header {
-    @apply py-8 md:py-12 text-center;
+    @apply py-6 md:py-12 text-center;
+    padding-top: max(env(safe-area-inset-top), 1.5rem);
   }
 
   .couple-names {
-    @apply font-script text-5xl md:text-6xl;
+    @apply font-script text-4xl sm:text-5xl md:text-6xl;
     color: #4A403A;
+    line-height: 1.2;
   }
 
   .wedding-date {
-    @apply text-lg md:text-xl mt-2 opacity-80;
+    @apply text-base sm:text-lg md:text-xl mt-2 opacity-80;
   }
 
   .page-title {
-    @apply text-2xl md:text-3xl font-semibold mt-4 tracking-tight;
+    @apply text-xl sm:text-2xl md:text-3xl font-semibold mt-4 tracking-tight;
   }
 
   .footer-border {
@@ -178,6 +211,26 @@
 
   .backdrop-blur-xs {
     backdrop-filter: blur(2px);
+  }
+
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .safe-area-inset {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .mobile-friendly {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
   }
 
   .bg-boho-cream {
@@ -235,6 +288,101 @@
   .text-boho-lavender {
     color: #B8A8C8;
   }
+  /* QR Code Component Styles */
+  .qr-code-container {
+    @apply bg-white rounded-2xl shadow-xl p-6 text-center max-w-sm mx-auto;
+  }
+
+  .qr-code-canvas {
+    @apply mx-auto mb-4 rounded-lg;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+
+  .qr-instruction {
+    @apply text-sm text-boho-brown opacity-80 mb-4;
+  }
+
+  /* Mobile Camera Interface */
+  .camera-controls {
+    @apply absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4;
+    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+  }
+
+  .camera-button {
+    @apply bg-white hover:bg-gray-100 text-gray-800 rounded-full shadow-lg transition-all transform active:scale-95 touch-manipulation;
+    min-height: 60px;
+    min-width: 60px;
+  }
+
+  .camera-button-large {
+    @apply camera-button;
+    width: 80px;
+    height: 80px;
+  }
+
+  /* Mobile Navigation */
+  .mobile-nav {
+    @apply bg-boho-brown-dark text-white;
+    padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+  }
+
+  .mobile-nav-link {
+    @apply py-3 px-4 font-medium transition-colors duration-200 touch-manipulation text-center;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Mobile Photo Gallery */
+  .mobile-gallery {
+    @apply grid gap-1 sm:gap-2;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  @media (max-width: 640px) {
+    .mobile-gallery {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.25rem;
+    }
+  }
+
+  /* Mobile Photo Upload */
+  .mobile-upload-area {
+    @apply w-full bg-boho-dusty-rose hover:bg-boho-dusty-rose-dark text-white rounded-2xl font-bold text-xl transition-all transform active:scale-95 touch-manipulation shadow-lg;
+    padding: 1.5rem 2rem;
+    min-height: 60px;
+  }
+
+  /* Mobile Photo Prompts */
+  .prompt-card {
+    @apply bg-gradient-to-r from-boho-dusty-rose to-boho-terracotta text-white rounded-2xl p-6 text-center relative overflow-hidden;
+    min-height: 120px;
+  }
+
+  .prompt-category-button {
+    @apply px-3 py-2 rounded-full text-sm font-medium transition-all transform active:scale-95 touch-manipulation;
+    min-height: 36px;
+  }
+
+  /* Mobile Status Messages */
+  .mobile-status {
+    @apply fixed bottom-4 left-4 right-4 z-50 rounded-xl shadow-lg;
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 }
 
 /* Transition animations */
@@ -246,6 +394,24 @@
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+/* Mobile-specific transitions */
+@media (max-width: 640px) {
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all 0.2s ease;
+  }
+  
+  .fade-enter-from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  
+  .fade-leave-to {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
 }
 
 /* Custom scrollbar for webkit browsers */
@@ -264,4 +430,60 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #C08080;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  /* Hide scrollbar on mobile for cleaner look */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Better mobile typography */
+  body {
+    font-size: 16px; /* Prevent zoom on iOS */
+    line-height: 1.5;
+  }
+  
+  /* Improve touch targets */
+  button, a, input, textarea {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+  
+  /* Better mobile forms */
+  input, textarea, select {
+    font-size: 16px; /* Prevent zoom on iOS */
+    border-radius: 12px;
+  }
+  
+  /* Mobile-friendly containers */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* PWA and iOS improvements */
+@media (display-mode: standalone) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Landscape mobile improvements */
+@media (max-width: 640px) and (orientation: landscape) {
+  .wedding-header {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .couple-names {
+    font-size: 2.5rem;
+  }
+  
+  .modal-overlay {
+    padding: 0.5rem;
+  }
 }

@@ -23,9 +23,9 @@
     </div>
 
     <div class="text-center mb-8 md:mb-16 relative z-10">
-      <h2 class="text-2xl md:text-3xl font-semibold mb-6 text-boho-brown-dark">Capture a Moment</h2>
+      <h2 class="text-2xl md:text-3xl font-semibold mb-6 text-boho-brown-dark">Zrób Zdjęcie</h2>
       <p class="text-sm md:text-base opacity-70 text-boho-brown">
-        Share your joy! Snap a photo and add it to our collective memory book.
+        Podziel się radością! Zrób zdjęcie i dodaj je do naszej wspólnej księgi wspomnień.
       </p>
       
       <!-- Small floral accent under subtitle -->
@@ -63,66 +63,124 @@
         </svg>
       </div>
       <!-- Camera preview when active -->
-      <div v-if="showPreview" class="relative rounded-xl overflow-hidden shadow-lg bg-black mb-4">
-        <video ref="videoPreview" autoplay playsinline muted class="w-full h-auto"></video>
-        <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-3 flex justify-center">
-          <button @click="capturePhoto" class="btn-secondary">
-            <span class="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div v-if="showPreview" class="relative rounded-xl overflow-hidden shadow-lg bg-black mb-4 max-h-[70vh]">
+        <video ref="videoPreview" autoplay playsinline muted class="w-full h-full object-cover"></video>
+        <!-- Camera controls overlay -->
+        <div class="absolute inset-0 pointer-events-none">
+          <!-- Grid lines for composition -->
+          <div class="absolute inset-4 border border-white opacity-20 grid grid-cols-3 grid-rows-3">
+            <div class="border-r border-b border-white"></div>
+            <div class="border-r border-b border-white"></div>
+            <div class="border-b border-white"></div>
+            <div class="border-r border-b border-white"></div>
+            <div class="border-r border-b border-white"></div>
+            <div class="border-b border-white"></div>
+            <div class="border-r border-white"></div>
+            <div class="border-r border-white"></div>
+            <div></div>
+          </div>
+        </div>
+        <!-- Control buttons -->
+        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4 pointer-events-auto">
+          <div class="flex justify-between items-center">
+            <button @click="stopCameraPreview" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white rounded-full p-3 transition-all touch-manipulation">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <!-- Large capture button -->
+            <button @click="capturePhoto" class="bg-white hover:bg-gray-100 text-gray-800 rounded-full p-6 shadow-lg transition-all transform active:scale-95 touch-manipulation">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              Take Photo
-            </span>
-          </button>
+            </button>
+            <!-- Switch camera button (for devices with multiple cameras) -->
+            <button @click="switchCamera" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white rounded-full p-3 transition-all touch-manipulation">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- Captured photo preview -->
-      <div v-if="capturedImageUrl" class="relative rounded-xl overflow-hidden shadow-lg mb-4">
-        <img :src="capturedImageUrl" alt="Captured photo" class="w-full h-auto" />
-        <!-- Upload progress overlay -->
-        <div v-if="isUploading" class="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center">
-          <div class="text-center text-white max-w-xs">
-            <div class="loading-spinner h-12 w-12 mx-auto mb-4"></div>
-            <p class="text-lg font-medium mb-3">{{ uploadMessage }}</p>
-            <!-- Progress bar -->
-            <div class="w-full bg-gray-600 rounded-full h-2 mb-2">
-              <div 
-                class="bg-white h-2 rounded-full transition-all duration-300 ease-out" 
-                :style="{ width: uploadProgress + '%' }"
-              ></div>
+      <div v-if="capturedImageUrl" class="space-y-4">
+        <div class="relative rounded-xl overflow-hidden shadow-lg max-h-[50vh]">
+          <img :src="capturedImageUrl" alt="Przechwycone zdjęcie" class="w-full h-full object-cover" />
+          <!-- Upload progress overlay -->
+          <div v-if="isUploading" class="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center">
+            <div class="text-center text-white max-w-xs px-4">
+              <div class="loading-spinner h-16 w-16 mx-auto mb-6"></div>
+              <p class="text-xl font-medium mb-4">{{ uploadMessage }}</p>
+              <!-- Progress bar -->
+              <div class="w-full bg-gray-600 rounded-full h-3 mb-3">
+                <div 
+                  class="bg-white h-3 rounded-full transition-all duration-300 ease-out" 
+                  :style="{ width: uploadProgress + '%' }"
+                ></div>
+              </div>
+              <p class="text-lg opacity-75">{{ uploadProgress }}% ukończone</p>
             </div>
-            <p class="text-sm opacity-75">{{ uploadProgress }}% complete</p>
           </div>
         </div>
-        <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-3 flex justify-between">
-          <button @click="discardPhoto" class="btn-secondary" style="background-color: #9CA3AF;">
-            Discard
-          </button>
-          <button @click="uploadPhoto" class="btn-primary" :disabled="isUploading">
-            <span v-if="isUploading" class="flex items-center">
-              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-              Uploading...
+        
+        <!-- Caption input -->
+        <div class="space-y-3">
+          <label class="block text-boho-brown-dark font-medium text-lg">
+            💭 Dodaj wiadomość (opcjonalnie)
+          </label>
+          <textarea 
+            v-model="photoCaption"
+            placeholder="Podziel się swoimi myślami o tym momencie... 💕"
+            class="w-full p-4 rounded-xl border-2 border-boho-rose-border focus:border-boho-dusty-rose focus:outline-none resize-none text-lg bg-white transition-colors touch-manipulation"
+            rows="3"
+            maxlength="200"
+            :disabled="isUploading"
+          ></textarea>
+          <div class="flex justify-between items-center text-sm text-boho-brown opacity-70">
+            <span>{{ photoCaption.length }}/200 znaków</span>
+            <span v-if="photoCaption.length > 0" class="text-boho-dusty-rose">✨ Idealne!</span>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="flex gap-4">
+          <button @click="discardPhoto" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 px-6 rounded-xl font-semibold transition-all transform active:scale-95 touch-manipulation">
+            <span class="flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Odrzuć
             </span>
-            <span v-else class="flex items-center">
+          </button>
+          <button @click="uploadPhoto" class="flex-2 bg-boho-dusty-rose hover:bg-boho-dusty-rose-dark text-white py-4 px-8 rounded-xl font-bold transition-all transform active:scale-95 touch-manipulation shadow-lg" :disabled="isUploading">
+            <span v-if="isUploading" class="flex items-center justify-center">
+              <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+              Przesyłanie...
+            </span>
+            <span v-else class="flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
-              Share Photo
+              🎉 Udostępnij Zdjęcie
             </span>
           </button>
         </div>
       </div>
 
       <!-- Photo capture button when preview not active -->
-      <div v-if="!showPreview && !capturedImageUrl" class="flex flex-col items-center">
-        <label for="photo-input" class="btn-primary text-center cursor-pointer mb-3 flex items-center text-lg md:text-xl">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          Take Photo
+      <div v-if="!showPreview && !capturedImageUrl" class="flex flex-col items-center space-y-6">
+        <!-- Primary action: Take photo directly -->
+        <label for="photo-input" class="w-full bg-boho-dusty-rose hover:bg-boho-dusty-rose-dark text-white py-6 px-8 rounded-2xl text-center cursor-pointer font-bold text-xl transition-all transform active:scale-95 touch-manipulation shadow-lg">
+          <span class="flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0118.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            📸 Zrób Zdjęcie
+          </span>
         </label>
         <input 
           id="photo-input" 
@@ -132,12 +190,29 @@
           class="hidden"
           @change="handleFileInput" 
         />
-        <p class="text-sm text-boho-brown opacity-70">or</p>
-        <button @click="startCameraPreview" class="mt-3 text-boho-dusty-rose underline hover:opacity-80 transition-opacity">
-          Use camera preview
+        
+        <!-- Divider -->
+        <div class="flex items-center w-full">
+          <div class="flex-1 h-px bg-boho-brown opacity-20"></div>
+          <span class="px-4 text-boho-brown opacity-70 text-sm">lub</span>
+          <div class="flex-1 h-px bg-boho-brown opacity-20"></div>
+        </div>
+        
+        <!-- Secondary action: Camera preview -->
+        <button @click="startCameraPreview" class="w-full bg-white border-2 border-boho-dusty-rose text-boho-dusty-rose py-4 px-6 rounded-xl font-semibold transition-all transform active:scale-95 touch-manipulation">
+          <span class="flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            Użyj Podglądu Kamery
+          </span>
         </button>
       </div>
     </section>
+
+    <!-- Photo Prompts Section -->
+    <PhotoPrompts ref="photoPromptsRef" class="max-w-lg mx-auto mb-8" />
+
 
     <!-- Decorative bottom florals -->
     <div class="absolute bottom-16 left-8 opacity-25 hidden lg:block">
@@ -176,18 +251,22 @@
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import api from '../api';
+import PhotoPrompts from '../components/PhotoPrompts.vue';
 
 // State variables
 const videoPreview = ref(null);
 const showPreview = ref(false);
 const capturedImageUrl = ref(null);
+const photoCaption = ref('');
 const isUploading = ref(false);
 const uploadProgress = ref(0);
-const uploadMessage = ref('Uploading your photo...');
+const uploadMessage = ref('Przesyłanie zdjęcia...');
 const statusMessage = ref('');
 const statusType = ref('');
+const photoPromptsRef = ref(null);
 let mediaStream = null;
 let canvas = null;
+let currentFacingMode = 'environment';
 
 // Start camera preview
 async function startCameraPreview() {
@@ -197,41 +276,52 @@ async function startCameraPreview() {
     
     // Check if camera is supported
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      setStatus('Camera not supported in this browser. Please use the file upload option.', 'error');
+      setStatus('Kamera nie jest obsługiwana w tej przeglądarce. Proszę użyć opcji przesyłania pliku.', 'error');
       return;
     }
 
     // Check if we're on HTTPS (required for camera access)
     if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-      setStatus('Camera requires HTTPS. Please use the file upload option or access via HTTPS.', 'error');
+      setStatus('Kamera wymaga HTTPS. Proszę użyć opcji przesyłania pliku lub dostępu przez HTTPS.', 'error');
       return;
     }
 
     console.log('Starting camera preview...');
-    setStatus('Requesting camera permission...', 'info');
+    setStatus('Proszę o pozwolenie na dostęp do kamery...', 'info');
 
-    // First try with ideal constraints
+    // First try with mobile-optimized constraints
     try {
-      console.log('Trying with ideal constraints...');
-      mediaStream = await navigator.mediaDevices.getUserMedia({ 
-        audio: false, // Explicitly state we don't need audio
-        video: { 
-          facingMode: 'environment',
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
-        } 
-      });
-      console.log('Camera stream obtained with ideal constraints');
-    } catch (constraintError) {
-      console.warn('Failed with ideal constraints, trying with basic constraints:', constraintError);
-      setStatus('Trying basic camera settings...', 'info');
-      
-      // If that fails, try with minimal constraints
+      console.log('Trying with mobile-optimized constraints...');
       mediaStream = await navigator.mediaDevices.getUserMedia({ 
         audio: false,
-        video: true 
+        video: { 
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 1920, max: 1920 },
+          height: { ideal: 1080, max: 1080 },
+          aspectRatio: { ideal: 16/9 }
+        } 
       });
-      console.log('Camera stream obtained with basic constraints');
+      console.log('Camera stream obtained with mobile-optimized constraints');
+    } catch (constraintError) {
+      console.warn('Failed with mobile constraints, trying with fallback:', constraintError);
+      setStatus('Dostosowywanie ustawień kamery dla Twojego urządzenia...', 'info');
+      
+      try {
+        // Try with just facingMode
+        mediaStream = await navigator.mediaDevices.getUserMedia({ 
+          audio: false,
+          video: { facingMode: 'environment' }
+        });
+        console.log('Camera stream obtained with environment facing mode');
+      } catch (facingError) {
+        console.warn('Environment facing mode failed, trying any camera:', facingError);
+        // If that fails, try with minimal constraints
+        mediaStream = await navigator.mediaDevices.getUserMedia({ 
+          audio: false,
+          video: true 
+        });
+        console.log('Camera stream obtained with basic constraints');
+      }
     }
 
     // Show preview first to make sure video element exists
@@ -249,11 +339,11 @@ async function startCameraPreview() {
         console.log('Video metadata loaded, attempting to play...');
         try {
           await videoPreview.value.play();
-          setStatus('Camera ready! You can now take a photo.', 'success');
+          setStatus('Kamera gotowa! Możesz teraz zrobić zdjęcie.', 'success');
           console.log('Camera preview started successfully');
         } catch (playError) {
           console.error('Error playing video:', playError);
-          setStatus('Could not start video preview. Browser may have blocked autoplay.', 'error');
+          setStatus('Nie można uruchomić podglądu wideo. Przeglądarka mogła zablokować automatyczne odtwarzanie.', 'error');
           stopCameraPreview();
         }
       };
@@ -261,12 +351,12 @@ async function startCameraPreview() {
       // Handle video errors
       videoPreview.value.onerror = (error) => {
         console.error('Video element error:', error);
-        setStatus('Video playback error. Please try again.', 'error');
+        setStatus('Błąd odtwarzania wideo. Proszę spróbować ponownie.', 'error');
         stopCameraPreview();
       };
     } else {
       console.error('Video preview element not found after DOM update');
-      setStatus('Video preview not available. Please refresh the page.', 'error');
+      setStatus('Podgląd wideo niedostępny. Proszę odświeżyć stronę.', 'error');
       stopCameraPreview();
     }
   } catch (error) {
@@ -274,15 +364,15 @@ async function startCameraPreview() {
     
     // Provide specific error messages based on error type
     if (error.name === 'NotAllowedError') {
-      setStatus('Camera permission denied. Please allow camera access and try again.', 'error');
+      setStatus('Odmówiono dostępu do kamery. Proszę zezwolić na dostęp do kamery i spróbować ponownie.', 'error');
     } else if (error.name === 'NotFoundError') {
-      setStatus('No camera found. Please use the file upload option.', 'error');
+      setStatus('Nie znaleziono kamery. Proszę użyć opcji przesyłania pliku.', 'error');
     } else if (error.name === 'NotSupportedError') {
-      setStatus('Camera not supported. Please use the file upload option.', 'error');
+      setStatus('Kamera nie jest obsługiwana. Proszę użyć opcji przesyłania pliku.', 'error');
     } else if (error.name === 'NotReadableError') {
-      setStatus('Camera is being used by another application. Please close other camera apps and try again.', 'error');
+      setStatus('Kamera jest używana przez inną aplikację. Proszę zamknąć inne aplikacje kamery i spróbować ponownie.', 'error');
     } else {
-      setStatus(`Camera error: ${error.message}. Please use the file upload option.`, 'error');
+      setStatus(`Błąd kamery: ${error.message}. Proszę użyć opcji przesyłania pliku.`, 'error');
     }
     
     stopCameraPreview();
@@ -313,8 +403,49 @@ function capturePhoto() {
   const ctx = canvas.getContext('2d');
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-  capturedImageUrl.value = canvas.toDataURL('image/jpeg');
+  // Convert to high-quality JPEG
+  capturedImageUrl.value = canvas.toDataURL('image/jpeg', 0.9);
   stopCameraPreview();
+  
+  // Provide haptic feedback if available
+  if ('vibrate' in navigator) {
+    navigator.vibrate(50);
+  }
+}
+
+// Switch between front and back camera
+async function switchCamera() {
+  currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+  
+  // Stop current stream
+  if (mediaStream) {
+    mediaStream.getTracks().forEach(track => track.stop());
+  }
+  
+  try {
+    setStatus('Przełączanie kamery...', 'info');
+    mediaStream = await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: {
+        facingMode: { ideal: currentFacingMode },
+        width: { ideal: 1920, max: 1920 },
+        height: { ideal: 1080, max: 1080 }
+      }
+    });
+    
+    if (videoPreview.value) {
+      videoPreview.value.srcObject = mediaStream;
+      await videoPreview.value.play();
+      setStatus('Kamera przełączona pomyślnie!', 'success');
+      setTimeout(() => setStatus('', ''), 2000);
+    }
+  } catch (error) {
+    console.error('Error switching camera:', error);
+    setStatus('Nie można przełączyć kamery. Używam bieżącej kamery.', 'error');
+    // Restart with original facing mode
+    currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+    setTimeout(() => setStatus('', ''), 3000);
+  }
 }
 
 // Handle file input from the native camera/gallery
@@ -322,9 +453,36 @@ function handleFileInput(event) {
   const file = event.target.files[0];
   if (!file) return;
 
+  // Validate file type
+  if (!file.type.startsWith('image/')) {
+    setStatus('Proszę wybrać plik obrazu.', 'error');
+    return;
+  }
+
+  // Validate file size (max 10MB)
+  if (file.size > 10 * 1024 * 1024) {
+    setStatus('Obraz jest za duży. Proszę wybrać obraz mniejszy niż 10MB.', 'error');
+    return;
+  }
+
+  setStatus('Przetwarzanie zdjęcia...', 'info');
+  
   const reader = new FileReader();
   reader.onload = (e) => {
     capturedImageUrl.value = e.target.result;
+    setStatus('Zdjęcie gotowe do udostępnienia! 📸✨', 'success');
+    setTimeout(() => setStatus('', ''), 2000);
+    
+    // Provide haptic feedback
+    if ('vibrate' in navigator) {
+      navigator.vibrate(50);
+    }
+    
+    // Clear the input so the same file can be selected again
+    event.target.value = '';
+  };
+  reader.onerror = () => {
+    setStatus('Błąd odczytu pliku obrazu. Proszę spróbować ponownie.', 'error');
   };
   reader.readAsDataURL(file);
 }
@@ -332,6 +490,7 @@ function handleFileInput(event) {
 // Discard captured photo
 function discardPhoto() {
   capturedImageUrl.value = null;
+  photoCaption.value = '';
   statusMessage.value = '';
 }
 
@@ -342,51 +501,68 @@ async function uploadPhoto() {
   // Get uploader ID from localStorage
   const uploaderId = localStorage.getItem('uploader_id');
   if (!uploaderId) {
-    setStatus('Error: Could not identify user. Please refresh the page.', 'error');
+    setStatus('Błąd: Nie można zidentyfikować użytkownika. Proszę odświeżyć stronę.', 'error');
     return;
   }
 
   isUploading.value = true;
   uploadProgress.value = 0;
-  setStatus('Preparing your photo for upload...', 'info');
+  setStatus('Przygotowywanie Twojego wspaniałego zdjęcia...', 'info');
 
   try {
     // Convert base64 to blob
     const blob = await fetch(capturedImageUrl.value).then(res => res.blob());
     
-    setStatus('Uploading photo to the wedding gallery...', 'info');
+    // Create a new file with caption metadata if provided
+    let fileToUpload = blob;
+    if (photoCaption.value.trim()) {
+      // For now, we'll handle caption separately since the current API doesn't support it
+      // In a real implementation, you might want to modify the API to accept captions
+      console.log('Photo caption:', photoCaption.value.trim());
+    }
+    
+    setStatus('Dzielenie się wspomnieniem ze wszystkimi...', 'info');
     
     // Send to backend using API client with progress tracking
-    await api.uploadPhoto(blob, uploaderId, (progress) => {
+    await api.uploadPhoto(fileToUpload, uploaderId, (progress) => {
       uploadProgress.value = progress;
       
-      // Update message based on progress
-      if (progress < 25) {
-        uploadMessage.value = 'Starting upload...';
-      } else if (progress < 50) {
-        uploadMessage.value = 'Uploading your photo...';
-      } else if (progress < 75) {
-        uploadMessage.value = 'Almost there...';
-      } else if (progress < 100) {
-        uploadMessage.value = 'Finalizing upload...';
+      // Update message based on progress with more engaging language
+      if (progress < 20) {
+        uploadMessage.value = 'Przygotowywanie Twojego pięknego zdjęcia...';
+      } else if (progress < 40) {
+        uploadMessage.value = 'Dodawanie do albumu ślubnego...';
+      } else if (progress < 60) {
+        uploadMessage.value = 'Prawie gotowe do udostępnienia...';
+      } else if (progress < 80) {
+        uploadMessage.value = 'Dodawanie ostatecznych poprawek...';
+      } else if (progress < 95) {
+        uploadMessage.value = 'Prawie gotowe...';
       } else {
-        uploadMessage.value = 'Processing complete!';
+        uploadMessage.value = 'Idealne! Wszystko gotowe! ✨';
       }
     });
 
-    setStatus('Photo uploaded successfully! 🎉', 'success');
-    // Clear the captured image after short delay
+    // Provide haptic feedback on success
+    if ('vibrate' in navigator) {
+      navigator.vibrate([100, 50, 100]);
+    }
+
+    setStatus('Twoje zdjęcie zostało udostępnione! 🎉✨ Dziękujemy za dodanie do naszych wspomnień!', 'success');
+    
+    // Clear the captured image and caption after delay
     setTimeout(() => {
       capturedImageUrl.value = null;
+      photoCaption.value = '';
       statusMessage.value = '';
-    }, 3000);
+    }, 4000);
   } catch (error) {
     console.error('Error uploading photo:', error);
-    setStatus('Failed to upload photo. Please check your connection and try again.', 'error');
+    setStatus('Nie udało się przesłać zdjęcia. Proszę sprawdzić połączenie i spróbować ponownie.', 'error');
   } finally {
     isUploading.value = false;
     uploadProgress.value = 0;
-    uploadMessage.value = 'Uploading your photo...';
+    uploadMessage.value = 'Przesyłanie zdjęcia...';
   }
 }
 

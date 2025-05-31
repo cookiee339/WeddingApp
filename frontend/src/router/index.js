@@ -11,19 +11,19 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomeView,
-    meta: { title: 'Capture a Moment' }
+    meta: { title: 'Zrób Zdjęcie' }
   },
   {
     path: '/all-photos',
     name: 'all-photos',
     component: AllPhotosView,
-    meta: { title: 'Shared Memories' }
+    meta: { title: 'Wspólne Wspomnienia' }
   },
   {
     path: '/my-photos',
     name: 'my-photos',
     component: MyPhotosView,
-    meta: { title: 'My Photos' }
+    meta: { title: 'Moje Zdjęcia' }
   }
 ]
 
@@ -35,7 +35,7 @@ const router = createRouter({
 
 // Update document title based on route
 router.beforeEach((to, from, next) => {
-  document.title = `${to.meta.title || 'Barbara & Mikołaj'} - Wedding Photo Guestbook`
+  document.title = `${to.meta.title || 'Barbara & Mikołaj'} - Ślubna Księga Fotograficzna`
   next()
 })
 
