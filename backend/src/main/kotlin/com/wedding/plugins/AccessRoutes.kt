@@ -14,7 +14,7 @@ fun Application.configureAccessRoutes() {
     val accessControlService = AccessControlService()
     
     routing {
-        route("/api/access") {
+        route("/access") {
             
             // Validate access token
             post("/validate") {

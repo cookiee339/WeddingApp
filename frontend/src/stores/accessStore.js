@@ -44,7 +44,7 @@ export const useAccessStore = defineStore('access', () => {
 
   async function validateToken(token) {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/access/validate`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/access/validate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

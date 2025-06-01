@@ -12,6 +12,12 @@ RUN npm install
 # Copy source code
 COPY . .
 
+# Declare an argument that can be passed during the Docker build
+ARG VITE_API_BASE_URL_ARG
+
+# Set the environment variable that Vite will use during the build
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL_ARG
+
 # Build the application
 RUN npm run build
 

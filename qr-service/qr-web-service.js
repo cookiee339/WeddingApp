@@ -28,7 +28,7 @@ async function ensureOutputDir() {
 // Generate access token from backend
 async function generateAccessToken(description, validityHours = 48) {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/access/generate`, {
+        const response = await fetch(`${API_BASE_URL}/access/generate`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -226,7 +226,7 @@ app.get('/api/qr-codes', async (req, res) => {
 // Get backend tokens
 app.get('/api/tokens', async (req, res) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/access/codes`);
+        const response = await fetch(`${API_BASE_URL}/access/codes`);
         if (!response.ok) {
             throw new Error(`Backend API error: ${response.status}`);
         }
