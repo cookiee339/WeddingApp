@@ -49,18 +49,6 @@ services:
     depends_on:
       database:
         condition: service_healthy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.weddingapi.rule=Host(`weselicho.malmon.ovh`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.weddingapi.entrypoints=websecure"
-      - "traefik.http.routers.weddingapi.tls.certresolver=letsencrypt" # Or your cert resolver
-      - "traefik.http.routers.weddingapi.service=weddingapi-service"
-      - "traefik.http.routers.weddingapi.middlewares=api-stripprefix" # Apply middleware to strip /api
-
-      - "traefik.http.middlewares.api-stripprefix.stripprefix.prefixes=/api" # Define the strip prefix middleware
-
-      - "traefik.http.services.weddingapi-service.loadbalancer.server.port=8080" # Ktor's internal port
-
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/access/codes"]
       interval: 30s
@@ -86,8 +74,9 @@ services:
       - "1080:80"
       - "1443:443"
     networks:
-      - wedding_network
-      - webproxy-shared-net
+      wedding_network:
+      webproxy-shared-net:
+        ipv4_address: 172.22.0.6
     depends_on:
       backend:
         condition: service_healthy
@@ -115,8 +104,9 @@ services:
     ports:
       - "3333:3000"
     networks:
-      - wedding_network
-      - webproxy-shared-net
+      wedding_network:
+      webproxy-shared-net:
+        ipv4_address: 172.22.0.5
     depends_on:
       backend:
         condition: service_healthy
