@@ -1,6 +1,6 @@
 package com.wedding.plugins
 
-import com.wedding.services.CloudinaryService
+import com.wedding.services.StorageService
 import com.wedding.services.PhotoService
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.PartData
@@ -23,7 +23,7 @@ import java.util.UUID
 import kotlin.math.ceil
 
 /** Configures routing for the application. */
-fun Application.configureRouting(cloudinaryService: CloudinaryService, photoService: PhotoService) {
+fun Application.configureRouting(storageService: StorageService, photoService: PhotoService) {
     val logger = KotlinLogging.logger {}
 
     // Constants for pagination defaults
@@ -159,8 +159,8 @@ fun Application.configureRouting(cloudinaryService: CloudinaryService, photoServ
                         return@post
                     }
 
-                    // Upload to Cloudinary
-                    val cloudinaryUrl = cloudinaryService.uploadImage(
+                    // Upload to storage backend
+                    val imageUrl = storageService.uploadImage(
                         imageStream!!.streamProvider(),
                         fileName!!,
                     )
@@ -168,7 +168,7 @@ fun Application.configureRouting(cloudinaryService: CloudinaryService, photoServ
                     // Always dispose the image stream after using it
                     imageStream!!.dispose.invoke()
 
-                    if (cloudinaryUrl == null) {
+                    if (imageUrl == null) {
                         call.respond(
                             HttpStatusCode.InternalServerError,
                             ErrorResponse("Upload failed", "Failed to upload image to cloud storage"),
@@ -177,7 +177,7 @@ fun Application.configureRouting(cloudinaryService: CloudinaryService, photoServ
                     }
 
                     // Save to database
-                    val photo = photoService.createPhoto(cloudinaryUrl, uploaderId!!)
+                    val photo = photoService.createPhoto(imageUrl, uploaderId!!)
                     if (photo != null) {
                         call.respond(HttpStatusCode.Created, photo)
                     } else {
@@ -252,12 +252,12 @@ fun Application.configureRouting(cloudinaryService: CloudinaryService, photoServ
                     return@delete
                 }
 
-                // Try to delete from Cloudinary as well, but don't fail the request if this fails
-                val publicId = cloudinaryService.extractPublicIdFromUrl(photo.imageUrl)
-                if (publicId != null) {
-                    val cloudinaryDeleted = cloudinaryService.deleteImage(publicId)
-                    if (!cloudinaryDeleted) {
-                        logger.warn { "Failed to delete image from Cloudinary: $publicId" }
+                // Try to delete from storage as well, but don't fail the request if this fails
+                val key = storageService.extractKeyFromUrl(photo.imageUrl)
+                if (key != null) {
+                    val deletedFromStorage = storageService.deleteImage(key)
+                    if (!deletedFromStorage) {
+                        logger.warn { "Failed to delete image from storage: $key" }
                     }
                 }
 

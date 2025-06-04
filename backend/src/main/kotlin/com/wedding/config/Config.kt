@@ -13,3 +13,10 @@ data class CloudinaryConfig(
     val apiKey: String,
     val apiSecret: String,
 )
+
+data class AwsS3Config(
+    val region: String,
+    val bucket: String,
+    val accessKeyId: String,
+    val secretAccessKey: String,
+)

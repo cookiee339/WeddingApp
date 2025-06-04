@@ -9,7 +9,7 @@ import java.io.InputStream
 /**
  * Service for interacting with Cloudinary for image uploads.
  */
-class CloudinaryService(config: CloudinaryConfig) {
+class CloudinaryService(config: CloudinaryConfig) : StorageService {
     private val logger = KotlinLogging.logger {}
 
     private val cloudinary = Cloudinary(
@@ -32,7 +32,7 @@ class CloudinaryService(config: CloudinaryConfig) {
      * @param filename The name of the file (for reference only)
      * @return The URL of the uploaded image if successful, null otherwise
      */
-    suspend fun uploadImage(imageStream: InputStream, filename: String): String? {
+    override suspend fun uploadImage(imageStream: InputStream, filename: String): String? {
         return try {
             // Convert the input stream to a byte array which Cloudinary can handle
             val bytes = imageStream.readAllBytes()
@@ -70,24 +70,24 @@ class CloudinaryService(config: CloudinaryConfig) {
     /**
      * Deletes an image from Cloudinary.
      *
-     * @param publicId The public ID of the image to delete
+     * @param identifier The identifier of the image to delete
      * @return True if deletion was successful, false otherwise
      */
-    suspend fun deleteImage(publicId: String): Boolean {
+    override suspend fun deleteImage(identifier: String): Boolean {
         return try {
-            val result = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap())
+            val result = cloudinary.uploader().destroy(identifier, ObjectUtils.emptyMap())
             val status = result["result"]
 
             val success = status == "ok"
             if (success) {
-                logger.info { "Successfully deleted image $publicId from Cloudinary" }
+                logger.info { "Successfully deleted image $identifier from Cloudinary" }
             } else {
-                logger.warn { "Failed to delete image $publicId from Cloudinary: $result" }
+                logger.warn { "Failed to delete image $identifier from Cloudinary: $result" }
             }
 
             success
         } catch (e: Exception) {
-            logger.error(e) { "Error deleting image $publicId from Cloudinary" }
+            logger.error(e) { "Error deleting image $identifier from Cloudinary" }
             false
         }
     }
@@ -103,4 +103,6 @@ class CloudinaryService(config: CloudinaryConfig) {
         val regex = ".*/v\\d+/(.+?)\\.[^.]+$".toRegex()
         return regex.find(url)?.groupValues?.get(1)
     }
+
+    override fun extractKeyFromUrl(url: String): String? = extractPublicIdFromUrl(url)
 }
