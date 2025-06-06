@@ -6,7 +6,7 @@ A full-stack web application that allows wedding guests to take photos during th
 
 - **Frontend**: Vue.js 3, Tailwind CSS
 - **Backend**: Kotlin with Ktor
-- **Photo Storage**: Cloudinary
+- **Photo Storage**: Multiple options (Cloudinary, AWS S3, Azure Storage)
 - **Database**: PostgreSQL
 
 ## Project Structure
@@ -19,13 +19,33 @@ WeddingApp/
 
 ## Setup Instructions
 
-### Prerequisites
+### Quick Start with Docker (Recommended)
+
+The easiest way to run the application locally is using Docker:
+
+1. Make sure you have Docker and Docker Compose installed
+2. Clone the repository
+3. Copy the example .env file: `cp .env.example .env`
+4. Edit the .env file with your storage credentials
+5. Start the application: `./docker-start.sh`
+
+For detailed Docker setup instructions, see [DOCKER-SETUP.md](DOCKER-SETUP.md).
+
+### Storage Backend Options
+
+The application supports multiple storage backends:
+
+1. **Cloudinary**: Default option, see setup below
+2. **AWS S3**: For setup instructions, see the AWS S3 section in [DOCKER-SETUP.md](DOCKER-SETUP.md)
+3. **Azure Storage**: For setup and testing instructions, see [AZURE-STORAGE-SETUP.md](AZURE-STORAGE-SETUP.md)
+
+### Prerequisites for Manual Setup
 
 - Node.js (v14+)
 - Kotlin (1.9+)
 - Gradle (7+)
 - PostgreSQL (13+)
-- Cloudinary account
+- Storage account (Cloudinary, AWS S3, or Azure Storage)
 
 ### Database Setup
 
@@ -156,4 +176,5 @@ Generate a QR code that links to your deployed frontend URL using any QR code ge
 
 - The app uses browser localStorage to store a unique identifier for each guest
 - No personal information is collected or stored
-- Cloudinary credentials are only stored on the server side
+- All storage credentials (Cloudinary, AWS S3, Azure) are only stored on the server side
+- QR code access control provides basic security for the application

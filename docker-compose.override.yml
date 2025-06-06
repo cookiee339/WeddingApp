@@ -41,7 +41,6 @@ services:
       - ./frontend/index.html:/app/index.html
       - ./frontend/vite.config.js:/app/vite.config.js
       - ./frontend/package.json:/app/package.json
-      - node_modules_cache:/app/node_modules
     command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 
   # Development overrides for QR service
@@ -87,34 +86,6 @@ services:
     depends_on:
       - database
 
-  # Redis Commander for Redis management
-  redis-commander:
-    image: rediscommander/redis-commander:latest
-    container_name: wedding_redis_commander
-    restart: unless-stopped
-    environment:
-      - REDIS_HOSTS=local:redis:6379:0:wedding_redis_2025
-    ports:
-      - "8082:8081"
-    networks:
-      - wedding_network
-    depends_on:
-      - redis
-    profiles:
-      - redis-tools
-
-  # Mailhog for email testing
-  mailhog:
-    image: mailhog/mailhog:latest
-    container_name: wedding_mailhog
-    restart: unless-stopped
-    ports:
-      - "1025:1025"  # SMTP
-      - "8025:8025"  # Web UI
-    networks:
-      - wedding_network
-    profiles:
-      - email-testing
 
 volumes:
   postgres_dev_data:

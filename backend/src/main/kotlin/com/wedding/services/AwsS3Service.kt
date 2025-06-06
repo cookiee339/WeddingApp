@@ -21,8 +21,8 @@ class AwsS3Service(config: AwsS3Config) : StorageService {
         .region(Region.of(region))
         .credentialsProvider(
             StaticCredentialsProvider.create(
-                AwsBasicCredentials.create(config.accessKeyId, config.secretAccessKey)
-            )
+                AwsBasicCredentials.create(config.accessKeyId, config.secretAccessKey),
+            ),
         )
         .build()
 
@@ -89,7 +89,7 @@ class AwsS3Service(config: AwsS3Config) : StorageService {
     private fun generatePresignedUrl(key: String): String {
         // For public buckets, you can construct the URL directly
         // For private buckets, you may want to use a presigner for temporary access
-        return "https://${bucket}.s3.${region}.amazonaws.com/$key"
+        return "https://$bucket.s3.$region.amazonaws.com/$key"
     }
 
     /**
@@ -103,4 +103,4 @@ class AwsS3Service(config: AwsS3Config) : StorageService {
         val regex = ".*amazonaws.com/(.+)$".toRegex()
         return regex.find(url)?.groupValues?.get(1)
     }
-} 
+}

@@ -1,7 +1,7 @@
 package com.wedding.plugins
 
-import com.wedding.services.StorageService
 import com.wedding.services.PhotoService
+import com.wedding.services.StorageService
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.PartData
 import io.ktor.http.content.forEachPart
@@ -19,7 +19,7 @@ import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import kotlinx.serialization.Serializable
 import mu.KotlinLogging
-import java.util.UUID
+import java.util.*
 import kotlin.math.ceil
 
 /** Configures routing for the application. */
@@ -217,7 +217,7 @@ fun Application.configureRouting(storageService: StorageService, photoService: P
                     null
                 }
                 val uploaderId = request?.get("uploader_id")
-                
+
                 logger.info { "Delete request for photo $id: uploaderId from request = '$uploaderId'" }
 
                 // Get the photo first to get the Cloudinary URL

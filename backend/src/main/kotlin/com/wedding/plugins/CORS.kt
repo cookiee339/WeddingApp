@@ -1,8 +1,10 @@
 package com.wedding.plugins
 
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.plugins.cors.routing.*
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.plugins.cors.routing.CORS
 
 /**
  * Configures Cross-Origin Resource Sharing (CORS) for the application.
@@ -22,7 +24,7 @@ fun Application.configureCORS() {
 
         // Allow all requested headers
         allowHeaders { true }
-        
+
         // Allow common headers explicitly
         allowHeader(HttpHeaders.ContentType)
         allowHeader(HttpHeaders.Authorization)
@@ -33,7 +35,7 @@ fun Application.configureCORS() {
 
         // Max age for preflight requests (in seconds)
         maxAgeInSeconds = 3600
-        
+
         // Ensure CORS headers are added to all responses, including error responses
         allowNonSimpleContentTypes = true
     }

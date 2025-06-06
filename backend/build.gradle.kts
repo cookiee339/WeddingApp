@@ -69,6 +69,10 @@ dependencies {
 
     // AWS S3
     implementation("software.amazon.awssdk:s3:2.25.62")
+
+    // Azure Storage
+    implementation("com.azure:azure-storage-blob:12.25.1")
+    implementation("com.azure:azure-identity:1.11.1")
 }
 
 // Hook ktlint check into the build process

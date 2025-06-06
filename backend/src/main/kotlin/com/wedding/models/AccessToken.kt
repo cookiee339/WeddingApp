@@ -6,7 +6,6 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.javatime.datetime
-import java.time.LocalDateTime
 
 object AccessTokens : IntIdTable() {
     val token = varchar("token", 255).uniqueIndex()
@@ -33,21 +32,21 @@ data class AccessTokenResponse(
     val description: String?,
     val createdAt: String,
     val expiresAt: String,
-    val isActive: Boolean
+    val isActive: Boolean,
 )
 
 @Serializable
 data class CreateAccessTokenRequest(
     val description: String? = null,
-    val validityHours: Int = 48
+    val validityHours: Int = 48,
 )
 
 @Serializable
 data class ValidateTokenRequest(
-    val token: String
+    val token: String,
 )
 
 @Serializable
 data class ValidateTokenResponse(
-    val valid: Boolean
+    val valid: Boolean,
 )

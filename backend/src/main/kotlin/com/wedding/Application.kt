@@ -2,6 +2,7 @@ package com.wedding
 
 import com.typesafe.config.ConfigFactory
 import com.wedding.config.AwsS3Config
+import com.wedding.config.AzureStorageConfig
 import com.wedding.config.CloudinaryConfig
 import com.wedding.config.DatabaseConfig
 import com.wedding.database.DatabaseFactory
@@ -11,6 +12,7 @@ import com.wedding.plugins.configureRouting
 import com.wedding.plugins.configureSerialization
 import com.wedding.plugins.configureStatusPages
 import com.wedding.services.AwsS3Service
+import com.wedding.services.AzureStorageService
 import com.wedding.services.CloudinaryService
 import com.wedding.services.PhotoService
 import com.wedding.services.StorageService
@@ -37,6 +39,10 @@ fun main() {
         "s3" -> {
             val s3Config = config.extract<AwsS3Config>("awsS3")
             AwsS3Service(s3Config)
+        }
+        "azure" -> {
+            val azureConfig = config.extract<AzureStorageConfig>("azure")
+            AzureStorageService(azureConfig)
         }
         else -> { // default to cloudinary
             val cloudinaryConfig = config.extract<CloudinaryConfig>("cloudinary")

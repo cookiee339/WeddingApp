@@ -20,3 +20,8 @@ data class AwsS3Config(
     val accessKeyId: String,
     val secretAccessKey: String,
 )
+
+data class AzureStorageConfig(
+    val connectionString: String,
+    val containerName: String,
+)
